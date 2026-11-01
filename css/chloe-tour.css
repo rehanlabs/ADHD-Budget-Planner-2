@@ -1,0 +1,185 @@
+/* =========================================================
+   ADHD Budget Planner (Edition 2) - Chloe's Interactive Tour System
+   Full hand-holding: DOM spotlights, typing simulation, zero modal overlap
+   ========================================================= */
+
+.tutorial-mask-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 20, 19, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.tutorial-mask-overlay.active {
+  opacity: 1;
+}
+
+/* Spotlight element */
+.tutorial-target-active {
+  position: relative !important;
+  z-index: 9200 !important;
+  outline: 3px solid #10b981 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.25), 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  animation: chloeTargetPulse 2s infinite ease-in-out !important;
+}
+
+@keyframes chloeTargetPulse {
+  0%, 100% { outline-color: #10b981; }
+  50% { outline-color: #34d399; }
+}
+
+/* Anchored Chloe Target Badge */
+.chloe-target-badge {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  background: #10b981;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 9210;
+  white-space: nowrap;
+  animation: chloeBadgePop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.nav-tab .chloe-target-badge {
+  top: -10px;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes chloeBadgePop {
+  from { transform: scale(0.7) translateY(4px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Typing animation highlight */
+.typing-active {
+  outline: 2px solid #10b981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Floating Tour Guide Card */
+.chloe-guide-card {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 28px);
+  max-width: 520px;
+  background: #111f1d;
+  border: 1px solid #10b981;
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 9500;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: chloeCardSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes chloeCardSlideUp {
+  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.chloe-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chloe-guide-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chloe-avatar {
+  font-size: 20px;
+}
+
+.chloe-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #10b981;
+}
+
+.chloe-step-counter {
+  font-size: 11px;
+  font-weight: 700;
+  color: #99f6e4;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.chloe-guide-body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #f0fdf4;
+}
+
+.chloe-guide-body strong {
+  color: #fbbf24;
+}
+
+.chloe-guide-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.chloe-btn-secondary {
+  background: none;
+  border: none;
+  color: #5eead4;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.chloe-btn-primary {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s ease;
+}
+
+.chloe-btn-primary:hover {
+  transform: scale(1.03);
+}
+
+.chloe-btn-primary.pulse {
+  animation: chloeBtnPulse 1.6s infinite;
+}
+
+@keyframes chloeBtnPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+}

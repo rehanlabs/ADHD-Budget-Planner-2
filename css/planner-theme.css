@@ -1,81 +1,89 @@
-/* ADHD Budget Planner - Modern Theme Definitions (Edition 2) */
+/* ADHD Budget Planner - Modern Theme Definitions (Edition 2: Nordic Frost & Glassmorphism) */
 :root {
   --font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
-  --font-mono: 'SF Mono', 'Roboto Mono', Menlo, monospace;
-  --radius-card: 16px;
-  --radius-btn: 10px;
-  --radius-pill: 99px;
-  --transition-quick: 0.18s ease;
+  --font-mono: 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+  --radius-card: 18px;
+  --radius-btn: 12px;
+  --radius-pill: 999px;
+  --transition-quick: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 1. Emerald Modern (Default) */
+/* 1. Emerald Modern (Default: Frosted Oceanic Obsidian & Luminous Mint) */
 body[data-theme="emerald-modern"] {
-  --bg-app: #0b1413;
-  --bg-panel: #111f1d;
-  --bg-tile: #182c29;
-  --bg-tile-hover: #213c38;
-  --border-line: #22423d;
-  --border-focus: #10b981;
-  --text-main: #f0fdf4;
+  --bg-app: #070f1a;
+  --bg-panel: rgba(14, 27, 44, 0.78);
+  --bg-tile: rgba(21, 39, 64, 0.65);
+  --bg-tile-hover: rgba(30, 56, 92, 0.85);
+  --border-line: rgba(56, 189, 248, 0.18);
+  --border-focus: #2dd4bf;
+  --text-main: #f0fdfa;
   --text-sub: #99f6e4;
   --text-dim: #5eead4;
   --color-primary: #10b981;
-  --color-accent: #34d399;
+  --color-accent: #2dd4bf;
+  --color-cyan: #38bdf8;
   --color-gold: #fbbf24;
   --color-rose: #f43f5e;
-  --hero-shadow: 0 10px 30px rgba(16, 185, 129, 0.12);
+  --hero-shadow: 0 16px 40px -8px rgba(16, 185, 129, 0.22);
+  --glass-blur: blur(18px);
 }
 
-/* 2. OLED Pure Dark */
+/* 2. OLED Pure Dark (Deep Minimalist Black with Neon Mint Accents) */
 body[data-theme="oled-dark"] {
-  --bg-app: #000000;
-  --bg-panel: #0a0a0a;
-  --bg-tile: #141414;
-  --bg-tile-hover: #1f1f1f;
-  --border-line: #262626;
+  --bg-app: #03060a;
+  --bg-panel: #0a111a;
+  --bg-tile: #111e2e;
+  --bg-tile-hover: #192a40;
+  --border-line: #1c324a;
   --border-focus: #34d399;
   --text-main: #ffffff;
-  --text-sub: #a3a3a3;
-  --text-dim: #737373;
+  --text-sub: #94a3b8;
+  --text-dim: #64748b;
   --color-primary: #34d399;
-  --color-accent: #2dd4bf;
+  --color-accent: #38bdf8;
+  --color-cyan: #38bdf8;
   --color-gold: #fbbf24;
   --color-rose: #f43f5e;
-  --hero-shadow: none;
+  --hero-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --glass-blur: none;
 }
 
-/* 3. Nordic Fog (Clean Light) */
+/* 3. Nordic Fog (Clean Pristine Frost Light) */
 body[data-theme="nordic-fog"] {
-  --bg-app: #f1f5f9;
-  --bg-panel: #ffffff;
+  --bg-app: #f0f6fa;
+  --bg-panel: rgba(255, 255, 255, 0.85);
   --bg-tile: #f8fafc;
   --bg-tile-hover: #e2e8f0;
   --border-line: #cbd5e1;
-  --border-focus: #059669;
+  --border-focus: #0d9488;
   --text-main: #0f172a;
-  --text-sub: #475569;
+  --text-sub: #334155;
   --text-dim: #64748b;
   --color-primary: #059669;
   --color-accent: #0d9488;
+  --color-cyan: #0284c7;
   --color-gold: #d97706;
   --color-rose: #e11d48;
-  --hero-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --hero-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  --glass-blur: blur(16px);
 }
 
-/* 4. Warm Earth */
+/* 4. Warm Earth (Deep Espresso Obsidian with Amber Mint Highlights) */
 body[data-theme="warm-earth"] {
-  --bg-app: #171514;
-  --bg-panel: #211e1c;
-  --bg-tile: #2c2826;
-  --bg-tile-hover: #3b3633;
-  --border-line: #423d3a;
-  --border-focus: #f59e0b;
-  --text-main: #fef3c7;
-  --text-sub: #d6d3d1;
-  --text-dim: #a8a29e;
-  --color-primary: #f59e0b;
+  --bg-app: #121516;
+  --bg-panel: rgba(28, 32, 34, 0.85);
+  --bg-tile: #272d30;
+  --bg-tile-hover: #363d42;
+  --border-line: #414b50;
+  --border-focus: #10b981;
+  --text-main: #fbfbfc;
+  --text-sub: #cbd5e1;
+  --text-dim: #94a3b8;
+  --color-primary: #10b981;
   --color-accent: #fbbf24;
+  --color-cyan: #2dd4bf;
   --color-gold: #fbbf24;
   --color-rose: #f43f5e;
-  --hero-shadow: 0 10px 30px rgba(245, 158, 11, 0.12);
+  --hero-shadow: 0 14px 36px rgba(16, 185, 129, 0.16);
+  --glass-blur: blur(16px);
 }

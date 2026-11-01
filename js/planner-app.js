@@ -6,9 +6,8 @@
   'use strict';
 
   let state = null;
-  let currentScreen = 'today';
+  let currentScreen = 'dashboard';
 
-  // --- Haptic Sound Feedback ---
   function playHapticClick() {
     if (!state || !state.profile || !state.profile.soundEnabled) return;
     try {
@@ -50,8 +49,16 @@
     }
   }
 
-  function renderToday() {
-    const safe = FinanceEngine.calculateSafeToSpend(state);
+  function renderDashboard() {
+    // Map obligations to bills format for FinanceEngine
+    const adapterState = {
+      checkingCents: state.checkingCents,
+      incomeAnchor: state.incomeAnchor,
+      incomeCycle: state.incomeCycle,
+      bills: state.obligations,
+      transactions: state.transactions
+    };
+    const safe = FinanceEngine.calculateSafeToSpend(adapterState);
     const heroAmt = document.getElementById('hero-safe-amount');
     if (heroAmt) {
       heroAmt.textContent = FinanceEngine.formatCents(safe.safeToSpendTodayCents, state.profile.currency);
@@ -70,7 +77,7 @@
       `;
     }
 
-    // Render Quick Spends Grid
+    // Render Quick Spends Grid (4-slot 2x2 grid)
     const grid = document.getElementById('quick-spend-grid');
     if (grid) {
       grid.innerHTML = (state.quickSpends || []).map(qs => `
@@ -93,37 +100,37 @@
             });
             StorageController.saveState(state);
             playHapticClick();
-            renderToday();
+            renderDashboard();
           }
         };
       });
     }
 
-    // Update Zombie Mode Hero
-    const zombieAmt = document.getElementById('zombie-hero-amount');
-    if (zombieAmt) {
-      zombieAmt.textContent = FinanceEngine.formatCents(safe.safeToSpendTodayCents, state.profile.currency);
+    // Update Burnout Shield Hero
+    const shieldAmt = document.getElementById('shield-hero-amount');
+    if (shieldAmt) {
+      shieldAmt.textContent = FinanceEngine.formatCents(safe.safeToSpendTodayCents, state.profile.currency);
     }
   }
 
-  function renderBills() {
-    const list = document.getElementById('bill-list');
+  function renderObligations() {
+    const list = document.getElementById('obligation-list');
     if (!list) return;
-    if (!state.bills || state.bills.length === 0) {
-      list.innerHTML = `<p style="text-align:center;color:var(--text-sub);padding:24px;">No recurring bills added. Tap "+ Add Bill" to protect upcoming rent or utilities.</p>`;
+    if (!state.obligations || state.obligations.length === 0) {
+      list.innerHTML = `<p style="text-align:center;color:var(--text-sub);padding:24px;">No obligations added. Tap "+ Add Obligation" to protect upcoming rent or bills.</p>`;
       return;
     }
 
-    list.innerHTML = state.bills.map(b => `
+    list.innerHTML = state.obligations.map(ob => `
       <div class="item-card">
         <div class="item-header">
-          <div class="item-title"><span>📅</span> <span>${b.name}</span></div>
-          <div class="item-amount">${FinanceEngine.formatCents(b.amountCents, state.profile.currency)}</div>
+          <div class="item-title"><span>📅</span> <span>${ob.name}</span></div>
+          <div class="item-amount">${FinanceEngine.formatCents(ob.amountCents, state.profile.currency)}</div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-sub);">
-          <span>Due: ${b.dueDate}</span>
-          <button type="button" class="btn-primary-action ${b.paid ? 'paid' : ''}" data-bill-id="${b.id}">
-            ${b.paid ? '✓ Paid' : 'Mark as Paid'}
+          <span>Due: ${ob.dueDate}</span>
+          <button type="button" class="btn-primary-action ${ob.paid ? 'paid' : ''}" data-obligation-id="${ob.id}">
+            ${ob.paid ? '✓ Settled' : 'Mark Settled'}
           </button>
         </div>
       </div>
@@ -131,28 +138,28 @@
 
     list.querySelectorAll('.btn-primary-action').forEach(btn => {
       btn.onclick = () => {
-        const bill = state.bills.find(b => b.id === btn.dataset.billId);
-        if (bill) {
-          bill.paid = !bill.paid;
+        const ob = state.obligations.find(b => b.id === btn.dataset.obligationId);
+        if (ob) {
+          ob.paid = !ob.paid;
           playHapticClick();
           StorageController.saveState(state);
-          renderBills();
-          renderToday();
+          renderObligations();
+          renderDashboard();
         }
       };
     });
   }
 
-  function renderVault() {
-    const list = document.getElementById('vault-list');
+  function renderWishlistPause() {
+    const list = document.getElementById('pause-list');
     if (!list) return;
-    if (!state.vaultItems || state.vaultItems.length === 0) {
-      list.innerHTML = `<p style="text-align:center;color:var(--text-sub);padding:24px;">Your Impulse Vault is clear. When an impulse urge hits, park it here for 48 hours to cool down!</p>`;
+    if (!state.wishlistPauseItems || state.wishlistPauseItems.length === 0) {
+      list.innerHTML = `<p style="text-align:center;color:var(--text-sub);padding:24px;">Your Wishlist Pause is clear. When an impulse urge hits, park it here for 48 hours to cool down!</p>`;
       return;
     }
 
     const now = Date.now();
-    list.innerHTML = state.vaultItems.map(item => {
+    list.innerHTML = state.wishlistPauseItems.map(item => {
       const cd = FinanceEngine.getVaultCountdown(item, now);
       return `
         <div class="item-card">
@@ -161,8 +168,8 @@
             <div class="item-amount">${FinanceEngine.formatCents(item.amountCents, state.profile.currency)}</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-sub);">
-            <span>${cd.isUnlocked ? '✨ Unlocked! Do you still genuinely want this?' : `Cooldown: ${cd.remainingHours}h remaining`}</span>
-            <button type="button" class="btn-primary-action" data-vault-id="${item.id}">Release & Save</button>
+            <span>${cd.isUnlocked ? '✨ 48 hours passed! Do you still genuinely want this?' : `Cooldown: ${cd.remainingHours}h remaining`}</span>
+            <button type="button" class="btn-primary-action" data-pause-id="${item.id}">Release & Save</button>
           </div>
         </div>
       `;
@@ -170,21 +177,21 @@
 
     list.querySelectorAll('.btn-primary-action').forEach(btn => {
       btn.onclick = () => {
-        const idx = state.vaultItems.findIndex(i => i.id === btn.dataset.vaultId);
+        const idx = state.wishlistPauseItems.findIndex(i => i.id === btn.dataset.pauseId);
         if (idx !== -1) {
-          state.vaultItems.splice(idx, 1);
+          state.wishlistPauseItems.splice(idx, 1);
           playHapticClick();
           StorageController.saveState(state);
-          renderVault();
+          renderWishlistPause();
         }
       };
     });
   }
 
-  function renderDebt() {
-    const list = document.getElementById('debt-list');
+  function renderPayoff() {
+    const list = document.getElementById('payoff-list');
     if (!list) return;
-    const plan = FinanceEngine.calculateDebtPlan(state.debts, 5000); // Snowball calculation
+    const plan = FinanceEngine.calculateDebtPlan(state.debts, 5000);
     document.getElementById('debt-free-summary').textContent = plan.isDebtFree ? `Projected Debt Free in ~${plan.monthsToDebtFree} months` : 'Enter debts to calculate freedom plan';
 
     if (!state.debts || state.debts.length === 0) {
@@ -205,8 +212,8 @@
     `).join('');
   }
 
-  function renderNotes() {
-    const textarea = document.getElementById('brain-dump-textarea');
+  function renderScratchpad() {
+    const textarea = document.getElementById('scratchpad-textarea');
     if (textarea && state.notes !== undefined) {
       textarea.value = state.notes;
     }
@@ -214,11 +221,11 @@
 
   function renderCurrentScreen() {
     renderHeader();
-    if (currentScreen === 'today') renderToday();
-    if (currentScreen === 'bills') renderBills();
-    if (currentScreen === 'vault') renderVault();
-    if (currentScreen === 'debt') renderDebt();
-    if (currentScreen === 'notes') renderNotes();
+    if (currentScreen === 'dashboard') renderDashboard();
+    if (currentScreen === 'obligations') renderObligations();
+    if (currentScreen === 'pause') renderWishlistPause();
+    if (currentScreen === 'payoff') renderPayoff();
+    if (currentScreen === 'scratchpad') renderScratchpad();
   }
 
   function bindUI() {
@@ -235,20 +242,20 @@
     };
 
     document.getElementById('btn-launch-tour').onclick = () => {
-      AssistantMaya.launchTour();
+      ChloeTour.startTour();
     };
 
-    // Zombie Mode Overlay
-    const zombie = document.getElementById('zombie-overlay');
-    document.getElementById('btn-zombie-mode').onclick = () => {
-      zombie.classList.add('active');
+    // Burnout Shield Overlay
+    const shield = document.getElementById('burnout-shield-overlay');
+    document.getElementById('btn-burnout-shield').onclick = () => {
+      shield.classList.add('active');
     };
-    document.getElementById('btn-exit-zombie').onclick = () => {
-      zombie.classList.remove('active');
+    document.getElementById('btn-exit-shield').onclick = () => {
+      shield.classList.remove('active');
     };
 
-    // Notes auto-save
-    const textarea = document.getElementById('brain-dump-textarea');
+    // Scratchpad auto-save
+    const textarea = document.getElementById('scratchpad-textarea');
     if (textarea) {
       textarea.oninput = () => {
         state.notes = textarea.value;
@@ -256,56 +263,56 @@
       };
     }
 
-    // Add Bill Modal
-    document.getElementById('btn-open-add-bill').onclick = () => {
-      document.getElementById('modal-add-bill').classList.add('open');
+    // Add Obligation Modal
+    document.getElementById('btn-open-add-obligation').onclick = () => {
+      document.getElementById('modal-add-obligation').classList.add('open');
     };
-    document.getElementById('btn-close-add-bill').onclick = () => {
-      document.getElementById('modal-add-bill').classList.remove('open');
+    document.getElementById('btn-close-add-obligation').onclick = () => {
+      document.getElementById('modal-add-obligation').classList.remove('open');
     };
-    document.getElementById('form-add-bill').onsubmit = (e) => {
+    document.getElementById('form-add-obligation').onsubmit = (e) => {
       e.preventDefault();
-      const name = document.getElementById('bill-name-input').value;
-      const amt = FinanceEngine.parseToCents(document.getElementById('bill-amount-input').value);
-      const date = document.getElementById('bill-date-input').value;
+      const name = document.getElementById('obligation-name-input').value;
+      const amt = FinanceEngine.parseToCents(document.getElementById('obligation-amount-input').value);
+      const date = document.getElementById('obligation-date-input').value;
       if (name && amt > 0 && date) {
-        state.bills.push({
-          id: 'bill-' + Date.now(),
+        state.obligations.push({
+          id: 'ob-' + Date.now(),
           name: name,
           amountCents: amt,
           dueDate: date,
           paid: false
         });
         StorageController.saveState(state);
-        document.getElementById('modal-add-bill').classList.remove('open');
+        document.getElementById('modal-add-obligation').classList.remove('open');
         playHapticClick();
-        renderBills();
-        renderToday();
+        renderObligations();
+        renderDashboard();
       }
     };
 
-    // Add Vault Modal
-    document.getElementById('btn-open-add-vault').onclick = () => {
-      document.getElementById('modal-add-vault').classList.add('open');
+    // Add Wishlist Pause Modal
+    document.getElementById('btn-open-add-pause').onclick = () => {
+      document.getElementById('modal-add-pause').classList.add('open');
     };
-    document.getElementById('btn-close-add-vault').onclick = () => {
-      document.getElementById('modal-add-vault').classList.remove('open');
+    document.getElementById('btn-close-add-pause').onclick = () => {
+      document.getElementById('modal-add-pause').classList.remove('open');
     };
-    document.getElementById('form-add-vault').onsubmit = (e) => {
+    document.getElementById('form-add-pause').onsubmit = (e) => {
       e.preventDefault();
-      const name = document.getElementById('vault-name-input').value;
-      const amt = FinanceEngine.parseToCents(document.getElementById('vault-amount-input').value);
+      const name = document.getElementById('pause-name-input').value;
+      const amt = FinanceEngine.parseToCents(document.getElementById('pause-amount-input').value);
       if (name && amt > 0) {
-        state.vaultItems.push({
-          id: 'v-' + Date.now(),
+        state.wishlistPauseItems.push({
+          id: 'wp-' + Date.now(),
           name: name,
           amountCents: amt,
           parkedAt: Date.now()
         });
         StorageController.saveState(state);
-        document.getElementById('modal-add-vault').classList.remove('open');
+        document.getElementById('modal-add-pause').classList.remove('open');
         playHapticClick();
-        renderVault();
+        renderWishlistPause();
       }
     };
 
@@ -322,8 +329,8 @@
       document.body.dataset.theme = state.profile.theme;
       StorageController.saveState(state);
       playHapticClick();
-      renderToday();
-      alert('Settings saved successfully.');
+      renderDashboard();
+      alert('Preferences saved successfully.');
     };
 
     // Backup & Restore
@@ -360,7 +367,7 @@
     state = StorageController.loadState();
     document.body.dataset.theme = state.profile.theme || 'emerald-modern';
     bindUI();
-    setScreen('today');
+    setScreen('dashboard');
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').catch(() => {});

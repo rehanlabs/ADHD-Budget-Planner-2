@@ -137,6 +137,8 @@ body {
 .hero-split-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-line);
+  backdrop-filter: var(--glass-blur, blur(16px));
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px));
   border-radius: var(--radius-card);
   padding: 22px 20px;
   margin-bottom: 20px;

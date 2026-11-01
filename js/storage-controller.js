@@ -28,16 +28,17 @@
       incomeCycle: 'biweekly',
       incomeAnchor: inFourteenDays,
       quickSpends: [
-        { id: 'qs-1', title: 'Coffee / Tea', icon: '☕', amountCents: 550 },
-        { id: 'qs-2', title: 'Fast Food / Lunch', icon: '🥪', amountCents: 1350 },
-        { id: 'qs-3', title: 'Groceries / Snack', icon: '🛒', amountCents: 3800 }
+        { id: 'qs-1', title: 'Dopamine Snack', icon: '⚡', amountCents: 450 },
+        { id: 'qs-2', title: 'Meal / Takeout', icon: '🥪', amountCents: 1600 },
+        { id: 'qs-3', title: 'Meds & Health', icon: '💊', amountCents: 2200 },
+        { id: 'qs-4', title: 'Transit / Rides', icon: '🚗', amountCents: 3500 }
       ],
-      bills: [
-        { id: 'bill-1', name: 'Apartment Rent', amountCents: 75000, dueDate: inNineDays, paid: false },
-        { id: 'bill-2', name: 'Wi-Fi & Mobile', amountCents: 7500, dueDate: inNineDays, paid: false }
+      obligations: [
+        { id: 'ob-1', name: 'Apartment Rent', amountCents: 75000, dueDate: inNineDays, paid: false },
+        { id: 'ob-2', name: 'Wi-Fi & Phone', amountCents: 7500, dueDate: inNineDays, paid: false }
       ],
-      vaultItems: [
-        { id: 'v-1', name: 'Noise-Cancelling Earbuds', amountCents: 9900, parkedAt: Date.now() - 3600000 * 22 }
+      wishlistPauseItems: [
+        { id: 'wp-1', name: 'Noise-Cancelling Earbuds', amountCents: 9900, parkedAt: Date.now() - 3600000 * 22 }
       ],
       debts: [
         { id: 'd-1', name: 'Mastercard Balance', balanceCents: 180000, minPaymentCents: 6500, interestRate: 19.99 }
@@ -57,8 +58,8 @@
       }
       const data = JSON.parse(raw);
       if (!data.profile) data.profile = { currency: 'USD', theme: 'emerald-modern', soundEnabled: true };
-      if (!Array.isArray(data.bills)) data.bills = [];
-      if (!Array.isArray(data.vaultItems)) data.vaultItems = [];
+      if (!Array.isArray(data.obligations)) data.obligations = [];
+      if (!Array.isArray(data.wishlistPauseItems)) data.wishlistPauseItems = [];
       if (!Array.isArray(data.debts)) data.debts = [];
       if (!Array.isArray(data.quickSpends)) data.quickSpends = [];
       if (!Array.isArray(data.transactions)) data.transactions = [];

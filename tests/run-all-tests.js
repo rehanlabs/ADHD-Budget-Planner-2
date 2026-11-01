@@ -34,14 +34,14 @@ assert(Engine.parseToCents(null) === 0, 'parseToCents handles null');
 assert(Engine.formatCents(155000, 'USD') === '$1,550.00', 'formatCents USD formatted');
 assert(Engine.formatCents(7500, 'EUR') === '€75.00', 'formatCents EUR symbol');
 
-console.log('\n--- SUITE 2: Safe-to-Spend Runway & Bills ---');
+console.log('\n--- SUITE 2: Safe-to-Spend Runway & Obligations ---');
 const testState = {
   checkingCents: 100000, // $1,000.00
   incomeCycle: 'biweekly',
   incomeAnchor: '2026-11-15',
   bills: [
     { id: 'b1', amountCents: 30000, dueDate: '2026-11-09', paid: false },
-    { id: 'b2', amountCents: 15000, dueDate: '2026-11-20', paid: false } // After payday!
+    { id: 'b2', amountCents: 15000, dueDate: '2026-11-20', paid: false }
   ],
   transactions: [
     { id: 't1', date: '2026-11-01', amountCents: 1350 }
@@ -66,25 +66,25 @@ assert(snowball.isDebtFree === true, 'Snowball simulation completes to zero debt
 assert(avalanche.isDebtFree === true, 'Avalanche simulation completes to zero debt');
 assert(avalanche.totalInterestPaidCents <= snowball.totalInterestPaidCents, 'Avalanche pays less or equal interest');
 
-console.log('\n--- SUITE 4: Impulse Vault 48-Hour Timer ---');
+console.log('\n--- SUITE 4: Wishlist Pause 48-Hour Timer ---');
 const now = Date.now();
 const itemFresh = { parkedAt: now };
 const itemCool = { parkedAt: now - 3600000 * 49 };
-assert(Engine.getVaultCountdown(itemFresh, now).isUnlocked === false, 'Fresh vault item is locked');
-assert(Engine.getVaultCountdown(itemFresh, now).remainingHours === 48, 'Fresh vault item has 48h left');
-assert(Engine.getVaultCountdown(itemCool, now).isUnlocked === true, 'Old vault item is unlocked after 48h');
+assert(Engine.getVaultCountdown(itemFresh, now).isUnlocked === false, 'Fresh wishlist item is paused');
+assert(Engine.getVaultCountdown(itemFresh, now).remainingHours === 48, 'Fresh wishlist item has 48h left');
+assert(Engine.getVaultCountdown(itemCool, now).isUnlocked === true, 'Old wishlist item is unlocked after 48h');
 
 console.log('\n--- SUITE 5: DOM & File Integrity ---');
 const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
-assert(html.includes('id="screen-today"'), 'HTML contains #screen-today');
-assert(html.includes('id="screen-bills"'), 'HTML contains #screen-bills');
-assert(html.includes('id="screen-vault"'), 'HTML contains #screen-vault');
-assert(html.includes('id="screen-debt"'), 'HTML contains #screen-debt');
-assert(html.includes('id="screen-notes"'), 'HTML contains #screen-notes');
-assert(html.includes('id="screen-settings"'), 'HTML contains #screen-settings');
-assert(html.includes('id="zombie-overlay"'), 'HTML contains #zombie-overlay');
-assert(html.includes('id="modal-add-bill"'), 'HTML contains modal #modal-add-bill');
-assert(html.includes('id="modal-add-vault"'), 'HTML contains modal #modal-add-vault');
+assert(html.includes('id="screen-dashboard"'), 'HTML contains #screen-dashboard');
+assert(html.includes('id="screen-obligations"'), 'HTML contains #screen-obligations');
+assert(html.includes('id="screen-pause"'), 'HTML contains #screen-pause');
+assert(html.includes('id="screen-payoff"'), 'HTML contains #screen-payoff');
+assert(html.includes('id="screen-scratchpad"'), 'HTML contains #screen-scratchpad');
+assert(html.includes('id="screen-preferences"'), 'HTML contains #screen-preferences');
+assert(html.includes('id="burnout-shield-overlay"'), 'HTML contains #burnout-shield-overlay');
+assert(html.includes('id="modal-add-obligation"'), 'HTML contains modal #modal-add-obligation');
+assert(html.includes('id="modal-add-pause"'), 'HTML contains modal #modal-add-pause');
 
 // Verify service worker cached assets exist on disk
 const swCode = fs.readFileSync(path.join(__dirname, '../sw.js'), 'utf8');
