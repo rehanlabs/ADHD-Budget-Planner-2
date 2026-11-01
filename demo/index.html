@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ADHD Budget Planner</title>
+  <meta name="description" content="Ultra low-friction personal finance app engineered for neurodivergent focus.">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ADHD Budget Planner">
+  <!-- Demo mode: no manifest -->
+  <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="../css/planner-theme.css">
+  <link rel="stylesheet" href="../css/planner-layout.css">
+  <link rel="stylesheet" href="../css/chloe-tour.css">
+  <link rel="stylesheet" href="./demo-banner.css">
+</head>
+<body data-theme="emerald-modern">
+
+  
+  <!-- Etsy Live Demo Header Bar -->
+  <aside class="etsy-demo-bar" aria-label="Live Preview Banner">
+    <div class="etsy-demo-badge">
+      <span class="etsy-demo-pill">✨ Live Preview</span>
+      <span class="etsy-demo-text">Interactive Demo (Temporary Session)</span>
+    </div>
+    <a href="https://www.etsy.com" target="_blank" rel="noopener" class="etsy-demo-cta">
+      🛒 Get Full App on Etsy
+    </a>
+  </aside>
+
+  <div class="adhd-container">
+
+    <!-- Top Header App Bar -->
+    <header class="adhd-header">
+      <div class="header-row">
+        <div class="brand-badge">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="brand-titles">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <h1>ADHD Budget Planner</h1>
+              <button type="button" class="nordic-help-badge" data-chloe-help="settings.sovereign" title="Offline Privacy & Security">?</button>
+            </div>
+            <span class="brand-subtitle">Nordic Glass Edition</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="pill-action-btn" id="btn-burnout-shield" title="Burnout Shield (Emergency Mode)">🛡️ Shield</button>
+          <button type="button" class="pill-action-btn" id="btn-launch-tour" title="Chloe's Guided Tour">👩‍💻 Guide</button>
+          <button type="button" class="icon-action-btn" id="btn-toggle-sound" title="Haptic Audio">🔔</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- TOP CAPSULE NAVIGATION BAR (Replaces Bottom Dock for Unique Layout) -->
+    <nav class="nordic-capsule-nav" id="capsule-nav" aria-label="Primary Navigation">
+      <button type="button" class="capsule-tab active" data-nav="dashboard">
+        <span class="tab-emoji">⚡</span>
+        <span class="tab-text">Dashboard</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="obligations">
+        <span class="tab-emoji">📋</span>
+        <span class="tab-text">Obligations</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="pause">
+        <span class="tab-emoji">⏳</span>
+        <span class="tab-text">Wishlist</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="payoff">
+        <span class="tab-emoji">📉</span>
+        <span class="tab-text">Payoff</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="scratchpad">
+        <span class="tab-emoji">📝</span>
+        <span class="tab-text">Notes</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="preferences">
+        <span class="tab-emoji">⚙️</span>
+        <span class="tab-text">Config</span>
+      </button>
+    </nav>
+
+    <!-- MAIN SCREENS -->
+    <main>
+      <!-- 1. Dashboard Screen -->
+      <section id="screen-dashboard" class="screen active">
+        <!-- Split Dual-Column Glass Hero -->
+        <div class="hero-split-card">
+          <div class="hero-main-section">
+            <div class="hero-label">
+              <span>✨</span> Safe to Spend Today
+              <button type="button" class="nordic-help-badge" data-chloe-help="horizon.velocity" title="About Safe Daily Horizon">?</button>
+            </div>
+            <div class="hero-number" id="hero-safe-amount">$0.00</div>
+            <div class="hero-subtext" id="hero-runway-subtext">Calculating daily allowance...</div>
+          </div>
+          <div class="runway-summary-strip" id="runway-summary-strip">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Interactive Next Payday & Income Card -->
+        <div class="payday-inflow-card" id="card-payday-inflow">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="inflow-badge">💵 Next Payday & Income</span>
+              <button type="button" class="nordic-help-badge" data-chloe-help="horizon.inflow" title="About Payday & Runway">?</button>
+            </div>
+            <button type="button" class="pill-action-btn" id="btn-edit-payday" style="font-size:11px;padding:3px 9px;">⚙️ Set Payday</button>
+          </div>
+          <div id="inflow-details-display" style="font-size:14px;font-weight:800;color:var(--text-main);">
+            Loading schedule...
+          </div>
+          <div id="inflow-runway-countdown" style="font-size:12px;color:var(--color-accent);margin-top:3px;">
+            Calculating runway...
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;">
+          <div style="font-size:12px;font-weight:800;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.06em;">
+            ⚡ 2x2 Fast Tap Spends
+          </div>
+          <button type="button" class="nordic-help-badge" data-chloe-help="horizon.quickspend" title="About Quick Velocity Spends">?</button>
+        </div>
+        <div class="quick-spend-grid" id="quick-spend-grid">
+          <!-- 4 slots 2x2 grid populated dynamically -->
+        </div>
+
+        <div id="today-spends-container"></div>
+
+        <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:16px;margin-top:14px;">
+          <div style="font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:6px;">💡 Chloe's Golden Rule:</div>
+          <p style="font-size:12px;color:var(--text-sub);line-height:1.6;">
+            Before tapping to buy, glance at your Safe to Spend Today number. If it is green, you can spend guilt-free knowing fixed commitments are already reserved!
+          </p>
+        </div>
+      </section>
+
+      <!-- 2. Obligations (Bills) Screen -->
+      <section id="screen-obligations" class="screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <h2 style="font-size:18px;font-weight:800;">Fixed Obligations</h2>
+              <button type="button" class="nordic-help-badge" data-chloe-help="obligations.fixed" title="About Fixed Obligations">?</button>
+            </div>
+            <p style="font-size:12px;color:var(--text-sub);">Essential commitments protected before calculating your allowance.</p>
+          </div>
+          <button type="button" class="btn-primary-action" id="btn-open-add-obligation">+ Add Obligation</button>
+        </div>
+        <div id="obligation-list">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- 3. Wishlist Pause Screen -->
+      <section id="screen-pause" class="screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <h2 style="font-size:18px;font-weight:800;">Wishlist Pause (48h Vault)</h2>
+              <button type="button" class="nordic-help-badge" data-chloe-help="pause.chamber" title="About 48h Wishlist Cooling Chamber">?</button>
+            </div>
+            <p style="font-size:12px;color:var(--text-sub);">Park online shopping urges here. 82% of impulses fade calmly in 48 hours.</p>
+          </div>
+          <button type="button" class="btn-primary-action" id="btn-open-add-pause">+ Pause Item</button>
+        </div>
+        <div id="pause-list">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- 4. Payoff Plan Screen -->
+      <section id="screen-payoff" class="screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <h2 style="font-size:18px;font-weight:800;">Payoff Plan (Debt Crusher)</h2>
+              <button type="button" class="nordic-help-badge" data-chloe-help="payoff.radar" title="About Debt Payoff Plan">?</button>
+            </div>
+            <p style="font-size:12px;color:var(--text-sub);">Snowball & Avalanche accelerated debt freedom path.</p>
+          </div>
+          <button type="button" class="btn-primary-action" id="btn-open-add-debt">+ Add Debt</button>
+        </div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--color-gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Freedom Projection</div>
+          <div style="font-size:17px;font-weight:800;color:var(--text-main);" id="debt-free-summary">Calculating projection...</div>
+        </div>
+        <div id="payoff-list">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- 5. Focus Scratchpad Screen -->
+      <section id="screen-scratchpad" class="screen">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <h2 style="font-size:18px;font-weight:800;">Focus Scratchpad</h2>
+          <button type="button" class="nordic-help-badge" data-chloe-help="scratchpad.brain" title="About Focus Scratchpad">?</button>
+        </div>
+        <p style="font-size:12px;color:var(--text-sub);margin-bottom:16px;">Zero-friction capture for money thoughts, upcoming expenses, or anxiety relief.</p>
+        <textarea id="scratchpad-textarea" class="form-input" style="height:280px;resize:none;font-size:14px;line-height:1.6;" placeholder="Type anything on your mind... auto-saves instantly."></textarea>
+      </section>
+
+      <!-- 6. Preferences Screen -->
+      <section id="screen-preferences" class="screen">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px;">
+          <h2 style="font-size:18px;font-weight:800;">Preferences & Backup</h2>
+          <button type="button" class="nordic-help-badge" data-chloe-help="settings.oops" title="About Oops Buffer & Preferences">?</button>
+        </div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:18px;margin-bottom:18px;">
+          <form id="form-planner-settings">
+            <div class="form-group">
+              <label>Checking Account Balance ($)</label>
+              <input type="number" step="0.01" class="form-input" id="settings-checking-balance" required>
+            </div>
+            <div class="form-group">
+              <label>Payday Frequency</label>
+              <select class="form-select" id="settings-income-cycle">
+                <option value="weekly">Weekly</option>
+                <option value="biweekly">Bi-Weekly (Every 2 Weeks)</option>
+                <option value="semimonthly">Semi-Monthly (1st & 15th)</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Visual Color Theme</label>
+              <select class="form-select" id="settings-theme-select">
+                <option value="emerald-modern">Emerald Modern</option>
+                <option value="oled-dark">OLED Dark</option>
+                <option value="nordic-fog">Nordic Fog (Light)</option>
+                <option value="warm-earth">Warm Earth</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Save Preferences 🌿</button>
+          </form>
+        </div>
+
+        <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:18px;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:10px;">💾 Backup & Device Transfer</div>
+          <button type="button" class="btn-primary-action" id="btn-export-backup" style="width:100%;padding:12px;margin-bottom:14px;">Download Backup (.json)</button>
+          <label style="display:block;font-size:12px;color:var(--text-sub);margin-bottom:6px;">Restore Backup File:</label>
+          <input type="file" id="input-restore-backup" accept=".json" class="form-input" style="font-size:12px;padding:6px;">
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Floating Quick HUD -->
+    <div class="nordic-floating-hud" id="nordic-floating-hud">
+      <button type="button" class="hud-shield-btn" id="hud-btn-shield" title="Toggle Burnout Shield">
+        🛡️ Burnout Shield
+      </button>
+      <button type="button" class="hud-spend-btn" id="hud-btn-add-spend" title="Log Custom Spend">
+        ⚡ + Custom Spend
+      </button>
+    </div>
+
+    <!-- FULLSCREEN BURNOUT SHIELD OVERLAY -->
+    <div id="burnout-shield-overlay" class="zombie-overlay">
+      <div class="zombie-title" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span>🛡️ Burnout Shield Active</span>
+        <button type="button" class="nordic-help-badge" data-chloe-help="shield.burnout" title="About Burnout Shield">?</button>
+      </div>
+      <p style="font-size:13px;color:#a3a3a3;margin-bottom:24px;">Low bandwidth day? Here is your single answer right now:</p>
+      <div style="font-size:14px;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Safe to Spend Today</div>
+      <div class="zombie-hero-number" id="shield-hero-amount">$0.00</div>
+      <button type="button" class="btn-zombie-exit" id="btn-exit-shield">Exit Burnout Shield 🌿</button>
+    </div>
+
+    <!-- MODAL: Set Payday & Income -->
+    <div id="modal-set-payday" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;">💵 Set Next Payday & Income</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-set-payday" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-set-payday">
+          <div class="form-group">
+            <label>Next Payday Date</label>
+            <input type="date" class="form-input" id="input-payday-date" required>
+          </div>
+          <div class="form-group">
+            <label>Expected Paycheck Amount ($)</label>
+            <input type="number" step="0.01" class="form-input" id="input-payday-amount" placeholder="2400.00" required>
+          </div>
+          <div class="form-group">
+            <label>Pay Frequency</label>
+            <select class="form-select" id="select-payday-cycle">
+              <option value="biweekly">Bi-Weekly (Every 2 Weeks)</option>
+              <option value="weekly">Weekly (Every 7 Days)</option>
+              <option value="semimonthly">Semi-Monthly (1st & 15th)</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Current Checking Balance ($)</label>
+            <input type="number" step="0.01" class="form-input" id="input-payday-checking" placeholder="1250.00" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Update Payday & Runway 🚀</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Custom Quick Spend -->
+    <div id="modal-custom-spend" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;">⚡ Log Custom Spend</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-custom-spend" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-custom-spend">
+          <div class="form-group">
+            <label>Spend Title / Description</label>
+            <input type="text" class="form-input" id="input-custom-spend-title" placeholder="Coffee & Croissant" required>
+          </div>
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" step="0.01" class="form-input" id="input-custom-spend-amt" placeholder="8.50" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Log Spend Now ⚡</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Add / Edit Obligation -->
+    <div id="modal-add-obligation" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;" id="modal-obligation-heading">📅 Add Obligation</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-add-obligation" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-add-obligation">
+          <input type="hidden" id="obligation-edit-id" value="">
+          <div class="form-group">
+            <label>Obligation Name (e.g. Rent, Wi-Fi, Phone)</label>
+            <input type="text" class="form-input" id="obligation-name-input" placeholder="Apartment Rent" required>
+          </div>
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" step="0.01" class="form-input" id="obligation-amount-input" placeholder="750.00" required>
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" class="form-input" id="obligation-date-input" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Save Obligation 🌿</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Add / Edit Wishlist Pause Item -->
+    <div id="modal-add-pause" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;" id="modal-pause-heading">⏳ Wishlist Pause (48h Vault)</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-add-pause" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-add-pause">
+          <input type="hidden" id="pause-edit-id" value="">
+          <div class="form-group">
+            <label>Item Name / Purchase Urge</label>
+            <input type="text" class="form-input" id="pause-name-input" placeholder="New Wireless Earbuds" required>
+          </div>
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" step="0.01" class="form-input" id="pause-amount-input" placeholder="99.00" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Save to 48h Vault ⏳</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Add / Edit Debt -->
+    <div id="modal-add-debt" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;" id="modal-debt-heading">📉 Add Debt Account</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-add-debt" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-add-debt">
+          <input type="hidden" id="debt-edit-id" value="">
+          <div class="form-group">
+            <label>Account Name (e.g. Visa Card, Car Loan)</label>
+            <input type="text" class="form-input" id="debt-name-input" placeholder="Visa Credit Card" required>
+          </div>
+          <div class="form-group">
+            <label>Current Balance ($)</label>
+            <input type="number" step="0.01" class="form-input" id="debt-balance-input" placeholder="850.00" required>
+          </div>
+          <div class="form-group">
+            <label>Minimum Monthly Payment ($)</label>
+            <input type="number" step="0.01" class="form-input" id="debt-min-input" placeholder="35.00" required>
+          </div>
+          <div class="form-group">
+            <label>Interest Rate (APR %)</label>
+            <input type="number" step="0.1" class="form-input" id="debt-apr-input" placeholder="19.9" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Save Debt Account 📉</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: CHLOE'S 4-TIER TACTICAL CONTEXTUAL HELP -->
+    <div id="modal-chloe-help" class="modal-overlay">
+      <div class="modal-box">
+        <div class="chloe-help-header">
+          <h3 class="chloe-help-title" id="chloe-help-title">👩‍💻 Chloe's Tactical Guide</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-chloe-help" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <div class="chloe-help-tiers-container">
+          <div class="chloe-help-tier">
+            <div class="chloe-tier-label">🎯 The Core Concept</div>
+            <div class="chloe-tier-content" id="chloe-help-core">&mdash;</div>
+          </div>
+          <div class="chloe-help-tier">
+            <div class="chloe-tier-label">⚡ Tactical Action</div>
+            <div class="chloe-tier-content" id="chloe-help-action">&mdash;</div>
+          </div>
+          <div class="chloe-help-tier">
+            <div class="chloe-tier-label">🧠 ADHD Brain Defense</div>
+            <div class="chloe-tier-content" id="chloe-help-brain">&mdash;</div>
+          </div>
+          <div class="chloe-help-tier">
+            <div class="chloe-tier-label">💡 Nordic Rule of Thumb</div>
+            <div class="chloe-tier-content" id="chloe-help-rule">&mdash;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+    <script src="./demo-guard.js"></script>
+  <script src="../js/finance-engine.js"></script>
+  <script src="../js/storage-controller.js"></script>
+  <script src="../js/chloe-help.js"></script>
+  <script src="../js/chloe-tour.js"></script>
+  <script src="../js/planner-app.js"></script>
+
+  <!-- Etsy Purchase Conversion Gate Modal -->
+  <div id="etsy-demo-gate-modal" class="etsy-demo-gate-overlay" onclick="if(event.target===this)closeDemoGate()">
+    <div class="etsy-demo-gate-box">
+      <div class="etsy-gate-icon">🔒</div>
+      <div class="etsy-gate-title" id="etsy-gate-modal-title">Unlock with Full Edition</div>
+      <div class="etsy-gate-desc">
+        You are currently in the <strong>Live Demo Sandbox</strong>. Data backups, persistent lifetime storage, and offline home screen installation are unlocked in the full Etsy edition!
+      </div>
+      <div class="etsy-gate-actions">
+        <a href="https://www.etsy.com" target="_blank" rel="noopener" class="etsy-gate-btn-buy">
+          🛒 Unlock Lifetime App on Etsy ($9.00)
+        </a>
+        <button type="button" class="etsy-gate-btn-close" onclick="closeDemoGate()">
+          Keep Exploring Demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
