@@ -1,14 +1,14 @@
 /* =========================================================
-   ADHD Budget Planner (Edition 2) - Chloe's Interactive Tour System
-   Full hand-holding: DOM spotlights, typing simulation, zero modal overlap
+   ADHD Budget Planner (Edition 2) - Chloe's Interactive Tour & Contextual Guide
+   Nordic Frost Glassmorphism: Zero-blur crystal clarity, DOM-anchored,
+   gentle ADHD guardrails, 100% mobile portrait responsive.
    ========================================================= */
 
+/* Crystal clear ambient tint (ZERO BLUR to keep text and tabs 100% sharp) */
 .tutorial-mask-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(11, 20, 19, 0.45);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(7, 15, 26, 0.15);
   z-index: 9000;
   pointer-events: none;
   opacity: 0;
@@ -19,27 +19,33 @@
   opacity: 1;
 }
 
-/* Spotlight element */
+/* Guardrail when tour is active */
+body.tutorial-active .nordic-capsule-nav .capsule-tab {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+/* DOM-Anchored Target Spotlight */
 .tutorial-target-active {
   position: relative !important;
   z-index: 9200 !important;
-  outline: 3px solid #10b981 !important;
+  outline: 2.5px solid #2dd4bf !important;
   outline-offset: 3px !important;
-  box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.25), 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 0 6px rgba(45, 212, 191, 0.25), 0 8px 24px rgba(0, 0, 0, 0.5) !important;
   animation: chloeTargetPulse 2s infinite ease-in-out !important;
 }
 
 @keyframes chloeTargetPulse {
-  0%, 100% { outline-color: #10b981; }
-  50% { outline-color: #34d399; }
+  0%, 100% { outline-color: #2dd4bf; }
+  50% { outline-color: #38bdf8; }
 }
 
 /* Anchored Chloe Target Badge */
 .chloe-target-badge {
   position: absolute;
   top: -12px;
-  right: -8px;
-  background: #10b981;
+  right: 12px;
+  background: linear-gradient(135deg, #10b981, #0891b2);
   color: #ffffff;
   font-size: 11px;
   font-weight: 800;
@@ -47,16 +53,17 @@
   border-radius: 999px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   pointer-events: none;
   z-index: 9210;
   white-space: nowrap;
   animation: chloeBadgePop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.nav-tab .chloe-target-badge {
-  top: -10px;
+/* Special centering for capsule navigation tabs */
+.capsule-tab .chloe-target-badge {
+  top: -12px;
   right: auto;
   left: 50%;
   transform: translateX(-50%);
@@ -69,32 +76,88 @@
 
 /* Typing animation highlight */
 .typing-active {
-  outline: 2px solid #10b981 !important;
-  background: rgba(16, 185, 129, 0.15) !important;
+  outline: 2px solid #2dd4bf !important;
+  background: rgba(45, 212, 191, 0.12) !important;
 }
 
-/* Floating Tour Guide Card */
+/* Top Tutorial HUD Bar */
+.tutorial-hud-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: rgba(7, 15, 26, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+  color: #f1f5f9;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 9700;
+  font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.tutorial-hud-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.tutorial-hud-step-pill {
+  background: rgba(45, 212, 191, 0.2);
+  color: #2dd4bf;
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tutorial-hud-exit {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tutorial-hud-exit:hover {
+  background: rgba(51, 65, 85, 0.9);
+  color: #ffffff;
+  border-color: #38bdf8;
+}
+
+/* Floating Tour Guide Card (Mobile-First, Safe Above Floating HUD) */
 .chloe-guide-card {
   position: fixed;
-  bottom: 84px;
+  bottom: calc(88px + env(safe-area-inset-bottom, 12px));
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 28px);
-  max-width: 520px;
-  background: #111f1d;
-  border: 1px solid #10b981;
+  width: calc(100% - 24px);
+  max-width: 480px;
+  background: rgba(11, 23, 38, 0.96);
+  border: 1.5px solid #2dd4bf;
   border-radius: 18px;
-  padding: 18px 20px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-  z-index: 9500;
+  padding: 14px 16px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.65), 0 0 20px rgba(45, 212, 191, 0.15);
+  z-index: 9600;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  animation: chloeCardSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 10px;
+  animation: chloeCardSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes chloeCardSlideUp {
-  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  from { transform: translateX(-50%) translateY(16px); opacity: 0; }
   to { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
 
@@ -102,6 +165,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+  padding-bottom: 8px;
 }
 
 .chloe-guide-identity {
@@ -112,74 +177,166 @@
 
 .chloe-avatar {
   font-size: 20px;
+  line-height: 1;
 }
 
 .chloe-name {
   font-size: 13px;
   font-weight: 800;
-  color: #10b981;
+  color: #2dd4bf;
 }
 
 .chloe-step-counter {
   font-size: 11px;
-  font-weight: 700;
-  color: #99f6e4;
-  background: rgba(16, 185, 129, 0.15);
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
   padding: 2px 8px;
-  border-radius: 99px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
 }
 
 .chloe-guide-body {
   font-size: 13px;
-  line-height: 1.6;
-  color: #f0fdf4;
+  line-height: 1.5;
+  color: #cbd5e1;
 }
 
 .chloe-guide-body strong {
-  color: #fbbf24;
+  color: #f8fafc;
 }
 
 .chloe-guide-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   margin-top: 4px;
 }
 
 .chloe-btn-secondary {
-  background: none;
-  border: none;
-  color: #5eead4;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #94a3b8;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 8px;
   cursor: pointer;
-  padding: 6px 10px;
+  transition: all 0.15s ease;
+}
+
+.chloe-btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: #ffffff;
 }
 
 .chloe-btn-primary {
-  background: #10b981;
+  background: linear-gradient(135deg, #10b981, #0891b2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  border: none;
   font-size: 12px;
   font-weight: 800;
-  padding: 8px 18px;
+  padding: 7px 16px;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  transition: all 0.15s ease;
 }
 
 .chloe-btn-primary:hover {
-  transform: scale(1.03);
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
-.chloe-btn-primary.pulse {
-  animation: chloeBtnPulse 1.6s infinite;
+/* =========================================================
+   NORDIC CONTEXTUAL HELP SYSTEM (Question Mark Badges & Modal)
+   ========================================================= */
+
+.nordic-help-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
-@keyframes chloeBtnPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+.nordic-help-badge:hover {
+  background: rgba(56, 189, 248, 0.3);
+  color: #ffffff;
+  border-color: #38bdf8;
+  transform: scale(1.08);
+}
+
+/* Modal Contextual Guide Layout */
+#modal-chloe-help .modal-box {
+  background: rgba(11, 23, 38, 0.97);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  max-width: 480px;
+  width: 100%;
+  padding: 20px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.chloe-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.chloe-help-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chloe-help-tiers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chloe-help-tier {
+  background: rgba(15, 32, 53, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.chloe-tier-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2dd4bf;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chloe-tier-content {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
 }

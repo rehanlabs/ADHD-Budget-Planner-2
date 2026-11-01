@@ -389,6 +389,53 @@
       }
     };
 
+    // Chloe Contextual Help Badges Modal
+    const modalChloeHelp = document.getElementById('modal-chloe-help');
+    document.addEventListener('click', (e) => {
+      const badge = e.target.closest('[data-chloe-help]');
+      if (badge && modalChloeHelp && window.ChloeHelp) {
+        const key = badge.dataset.chloeHelp;
+        const item = window.ChloeHelp[key];
+        if (item) {
+          document.getElementById('chloe-help-title').textContent = '👩‍💻 ' + item.title;
+          document.getElementById('chloe-help-core').textContent = item.core;
+          document.getElementById('chloe-help-action').textContent = item.action;
+          document.getElementById('chloe-help-brain').textContent = item.brain;
+          document.getElementById('chloe-help-rule').textContent = item.rule;
+          modalChloeHelp.classList.add('open');
+          modalChloeHelp.style.display = 'flex';
+          playHapticClick();
+        }
+      }
+    });
+
+    const btnCloseHelp = document.getElementById('btn-close-chloe-help');
+    if (btnCloseHelp && modalChloeHelp) {
+      btnCloseHelp.onclick = () => {
+        modalChloeHelp.classList.remove('open');
+        modalChloeHelp.style.display = 'none';
+      };
+    }
+
+    // Close modals on backdrop click or Escape
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('open');
+          overlay.style.display = 'none';
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+          m.classList.remove('open');
+          m.style.display = 'none';
+        });
+      }
+    });
+
     // Settings Form
     document.getElementById('settings-checking-balance').value = (state.checkingCents / 100).toFixed(2);
     document.getElementById('settings-income-cycle').value = state.incomeCycle || 'biweekly';

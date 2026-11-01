@@ -128,6 +128,9 @@ assert(html.includes('id="screen-preferences"'), 'HTML contains #screen-preferen
 assert(html.includes('id="burnout-shield-overlay"'), 'HTML contains #burnout-shield-overlay');
 assert(html.includes('id="modal-add-obligation"'), 'HTML contains modal #modal-add-obligation');
 assert(html.includes('id="modal-add-pause"'), 'HTML contains modal #modal-add-pause');
+assert(html.includes('id="modal-chloe-help"'), 'HTML contains modal #modal-chloe-help');
+assert(html.includes('class="nordic-help-badge"'), 'HTML contains .nordic-help-badge buttons');
+assert(html.includes('src="./js/chloe-help.js"'), 'HTML references chloe-help.js');
 
 // Hygiene check
 assert(!html.includes('NaN'), 'HTML contains no literal NaN text');
