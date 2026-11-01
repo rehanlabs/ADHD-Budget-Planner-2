@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ADHD Budget Planner — Printable Tracker</title>
+  <style>
+    @page { size: letter portrait; margin: 15mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #0f172a;
+      padding: 10px;
+      line-height: 1.4;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #10b981;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 22px; font-weight: 900; color: #059669; }
+    .meta-box { font-size: 13px; color: #64748b; font-weight: 600; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .card {
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 14px;
+      background: #f8fafc;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #059669;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed #cbd5e1;
+      padding-bottom: 4px;
+    }
+    .table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .table th, .table td { border: 1px solid #e2e8f0; padding: 8px 6px; text-align: left; }
+    .table th { background: #f1f5f9; font-weight: 700; color: #334155; }
+    .checkbox { width: 14px; height: 14px; border: 1px solid #94a3b8; display: inline-block; vertical-align: middle; margin-right: 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>🌱 ADHD BUDGET PLANNER — DAILY LOG SHEET</h1>
+      <p style="font-size: 12px; color: #64748b;">Calm Neurodivergent Expense & Impulse Tracking Worksheet</p>
+    </div>
+    <div class="meta-box">
+      <div>Name: __________________________</div>
+      <div>Payday Cycle: ____________________</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">✨ Daily Safe to Spend Allowance</div>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Target Daily Allowance: <strong>$___________</strong></p>
+      <table class="table">
+        <tr><th>Purchase / Spend</th><th>Amount</th><th>Category</th></tr>
+        <tr><td>&nbsp;</td><td>$</td><td>Quick Spend</td></tr>
+        <tr><td>&nbsp;</td><td>$</td><td>Quick Spend</td></tr>
+        <tr><td>&nbsp;</td><td>$</td><td>Quick Spend</td></tr>
+        <tr><td>&nbsp;</td><td>$</td><td>Quick Spend</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏳ 48-Hour Impulse Vault</div>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Park shopping urges here for 48 hours.</p>
+      <table class="table">
+        <tr><th>Item Urge</th><th>Price</th><th>After 48h Decision</th></tr>
+        <tr><td>&nbsp;</td><td>$</td><td><span class="checkbox"></span> Buy &nbsp; <span class="checkbox"></span> Pass</td></tr>
+        <tr><td>&nbsp;</td><td>$</td><td><span class="checkbox"></span> Buy &nbsp; <span class="checkbox"></span> Pass</td></tr>
+        <tr><td>&nbsp;</td><td>$</td><td><span class="checkbox"></span> Buy &nbsp; <span class="checkbox"></span> Pass</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <div class="card-title">📅 Bills & Debt Payoff Tracker</div>
+    <table class="table">
+      <tr><th>Bill / Debt Name</th><th>Amount</th><th>Due Date</th><th>Status</th></tr>
+      <tr><td>Housing / Rent</td><td>$</td><td></td><td><span class="checkbox"></span> Paid</td></tr>
+      <tr><td>Utilities & Internet</td><td>$</td><td></td><td><span class="checkbox"></span> Paid</td></tr>
+      <tr><td>Credit Card Min Payment</td><td>$</td><td></td><td><span class="checkbox"></span> Paid</td></tr>
+      <tr><td>Car / Transit</td><td>$</td><td></td><td><span class="checkbox"></span> Paid</td></tr>
+    </table>
+  </div>
+
+  <div style="text-align: center; font-size: 11px; color: #94a3b8;">
+    ADHD Budget Planner • Printable Companion Sheet • Designed with care for neurodivergent minds everywhere.
+  </div>
+</body>
+</html>

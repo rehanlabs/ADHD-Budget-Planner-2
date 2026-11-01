@@ -1,0 +1,443 @@
+/* ADHD Budget Planner - Modern Layout & Styles (Edition 2) */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-base);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.adhd-container {
+  max-width: 580px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 92px;
+  position: relative;
+}
+
+/* Header App Bar */
+.adhd-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(11, 20, 19, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-line);
+  padding: 12px 18px;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-tile);
+  border: 1px solid var(--border-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.brand-titles h1 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pill-action-btn {
+  background: var(--bg-tile);
+  border: 1px solid var(--border-line);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: var(--transition-quick);
+}
+
+.pill-action-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.icon-action-btn {
+  background: var(--bg-tile);
+  border: 1px solid var(--border-line);
+  color: var(--text-sub);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-btn);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Screens */
+.screen {
+  display: none;
+  padding: 18px;
+  animation: fadeIn 0.2s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Split-Card Modern Hero Dashboard */
+.hero-split-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-card);
+  padding: 22px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--hero-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-main-section {
+  text-align: center;
+}
+
+.hero-label {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hero-number {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-family: var(--font-mono);
+  color: var(--text-main);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.hero-subtext {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+/* Runway Strip */
+.runway-summary-strip {
+  background: var(--bg-tile);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.runway-summary-strip strong {
+  color: var(--text-main);
+}
+
+/* Quick Spends Grid */
+.quick-spend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.spend-tile-btn {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-line);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-quick);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.spend-tile-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--bg-tile);
+  transform: translateY(-2px);
+}
+
+.spend-tile-icon { font-size: 22px; }
+.spend-tile-title { font-size: 12px; font-weight: 700; }
+.spend-tile-amt { font-size: 11px; font-family: var(--font-mono); color: var(--color-gold); }
+
+/* Item Cards (Bills, Vault, Debt) */
+.item-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: var(--transition-quick);
+}
+
+.item-card:hover {
+  border-color: var(--border-focus);
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.item-title {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-amount {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-gold);
+}
+
+.btn-primary-action {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: var(--transition-quick);
+}
+
+.btn-primary-action:hover {
+  opacity: 0.9;
+}
+
+.btn-primary-action.paid {
+  background: #064e3b;
+  color: #34d399;
+}
+
+/* Zombie Mode Overlay */
+.zombie-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000000;
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.zombie-overlay.active {
+  display: flex;
+}
+
+.zombie-title {
+  font-size: 18px;
+  color: #737373;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.zombie-hero-number {
+  font-size: 58px;
+  font-family: var(--font-mono);
+  font-weight: 900;
+  color: #10b981;
+  margin-bottom: 24px;
+}
+
+.btn-zombie-exit {
+  background: #171717;
+  color: #a3a3a3;
+  border: 1px solid #333;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Bottom Segmented Dock */
+.nav-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(11, 20, 19, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-line);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 12px;
+  z-index: 50;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: var(--transition-quick);
+}
+
+.nav-tab svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2;
+}
+
+.nav-tab:hover {
+  color: var(--text-main);
+}
+
+.nav-tab.active {
+  color: var(--color-primary);
+}
+
+.nav-tab.active svg {
+  stroke: var(--color-primary);
+}
+
+/* Modals */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 90;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-card);
+  width: 100%;
+  max-width: 440px;
+  padding: 22px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  background: var(--bg-tile);
+  border: 1px solid var(--border-line);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-input:focus, .form-select:focus {
+  border-color: var(--color-primary);
+}

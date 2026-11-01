@@ -1,0 +1,81 @@
+/* ADHD Budget Planner - Modern Theme Definitions (Edition 2) */
+:root {
+  --font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+  --font-mono: 'SF Mono', 'Roboto Mono', Menlo, monospace;
+  --radius-card: 16px;
+  --radius-btn: 10px;
+  --radius-pill: 99px;
+  --transition-quick: 0.18s ease;
+}
+
+/* 1. Emerald Modern (Default) */
+body[data-theme="emerald-modern"] {
+  --bg-app: #0b1413;
+  --bg-panel: #111f1d;
+  --bg-tile: #182c29;
+  --bg-tile-hover: #213c38;
+  --border-line: #22423d;
+  --border-focus: #10b981;
+  --text-main: #f0fdf4;
+  --text-sub: #99f6e4;
+  --text-dim: #5eead4;
+  --color-primary: #10b981;
+  --color-accent: #34d399;
+  --color-gold: #fbbf24;
+  --color-rose: #f43f5e;
+  --hero-shadow: 0 10px 30px rgba(16, 185, 129, 0.12);
+}
+
+/* 2. OLED Pure Dark */
+body[data-theme="oled-dark"] {
+  --bg-app: #000000;
+  --bg-panel: #0a0a0a;
+  --bg-tile: #141414;
+  --bg-tile-hover: #1f1f1f;
+  --border-line: #262626;
+  --border-focus: #34d399;
+  --text-main: #ffffff;
+  --text-sub: #a3a3a3;
+  --text-dim: #737373;
+  --color-primary: #34d399;
+  --color-accent: #2dd4bf;
+  --color-gold: #fbbf24;
+  --color-rose: #f43f5e;
+  --hero-shadow: none;
+}
+
+/* 3. Nordic Fog (Clean Light) */
+body[data-theme="nordic-fog"] {
+  --bg-app: #f1f5f9;
+  --bg-panel: #ffffff;
+  --bg-tile: #f8fafc;
+  --bg-tile-hover: #e2e8f0;
+  --border-line: #cbd5e1;
+  --border-focus: #059669;
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-dim: #64748b;
+  --color-primary: #059669;
+  --color-accent: #0d9488;
+  --color-gold: #d97706;
+  --color-rose: #e11d48;
+  --hero-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 4. Warm Earth */
+body[data-theme="warm-earth"] {
+  --bg-app: #171514;
+  --bg-panel: #211e1c;
+  --bg-tile: #2c2826;
+  --bg-tile-hover: #3b3633;
+  --border-line: #423d3a;
+  --border-focus: #f59e0b;
+  --text-main: #fef3c7;
+  --text-sub: #d6d3d1;
+  --text-dim: #a8a29e;
+  --color-primary: #f59e0b;
+  --color-accent: #fbbf24;
+  --color-gold: #fbbf24;
+  --color-rose: #f43f5e;
+  --hero-shadow: 0 10px 30px rgba(245, 158, 11, 0.12);
+}
