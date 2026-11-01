@@ -135,6 +135,41 @@
       });
     }
 
+    // Render Today's Logged Spends (with Undo / Remove button)
+    const todayBox = document.getElementById('today-spends-container');
+    if (todayBox) {
+      const todayISO = new Date().toISOString().slice(0, 10);
+      const todayTxs = (state.transactions || []).filter(tx => tx.date === todayISO);
+      if (todayTxs.length === 0) {
+        todayBox.innerHTML = '';
+      } else {
+        todayBox.innerHTML = `
+          <div style="font-size:11px;font-weight:800;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.06em;margin:4px 0 8px;">
+            🧾 Logged Today (${todayTxs.length})
+          </div>
+          ${todayTxs.map(tx => `
+            <div class="list-item-card" style="padding:10px 14px;margin-bottom:8px;">
+              <div class="item-info">
+                <div class="item-title" style="font-size:13.5px;">${tx.title}</div>
+              </div>
+              <div class="card-actions-row">
+                <div class="item-amount" style="font-size:13.5px;">-${FinanceEngine.formatCents(tx.amountCents, state.profile.currency)}</div>
+                <button type="button" class="btn-card-delete" data-del-tx="${tx.id}" title="Undo / Remove Spend">&times;</button>
+              </div>
+            </div>
+          `).join('')}
+        `;
+        todayBox.querySelectorAll('[data-del-tx]').forEach(btn => {
+          btn.onclick = () => {
+            state.transactions = state.transactions.filter(t => t.id !== btn.dataset.delTx);
+            StorageController.saveState(state);
+            playHapticClick();
+            renderDashboard();
+          };
+        });
+      }
+    }
+
     // Update Burnout Shield Hero
     const shieldAmt = document.getElementById('shield-hero-amount');
     if (shieldAmt) {
@@ -154,13 +189,15 @@
       <div class="list-item-card">
         <div class="item-info">
           <div class="item-title">${ob.name}</div>
-          <div class="item-sub">Due: ${ob.dueDate} ${ob.paid ? '• <span style="color:var(--color-primary)">PAID</span>' : ''}</div>
+          <div class="item-sub">Due: ${ob.dueDate} ${ob.paid ? '• <span style="color:var(--color-primary);font-weight:700;">✓ PAID</span>' : '• <span style="color:var(--color-gold);">Reserved</span>'}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;">
+        <div class="card-actions-row">
           <div class="item-amount">${FinanceEngine.formatCents(ob.amountCents, state.profile.currency)}</div>
-          <button type="button" class="btn-check-toggle ${ob.paid ? 'active' : ''}" data-ob-id="${ob.id}" title="Toggle Paid">
-            ${ob.paid ? '✓' : ''}
+          <button type="button" class="btn-check-toggle ${ob.paid ? 'active' : ''}" data-ob-id="${ob.id}" title="Mark Paid or Unpaid">
+            ${ob.paid ? '✓ Paid' : 'Mark Paid'}
           </button>
+          <button type="button" class="btn-card-edit" data-edit-ob="${ob.id}" title="Edit Obligation">✏️ Edit</button>
+          <button type="button" class="btn-card-delete" data-del-ob="${ob.id}" title="Remove Obligation">&times;</button>
         </div>
       </div>
     `).join('');
@@ -175,6 +212,31 @@
           renderObligations();
           renderDashboard();
         }
+      };
+    });
+
+    list.querySelectorAll('[data-edit-ob]').forEach(btn => {
+      btn.onclick = () => {
+        const ob = state.obligations.find(o => o.id === btn.dataset.editOb);
+        if (ob) {
+          const heading = document.getElementById('modal-obligation-heading');
+          if (heading) heading.textContent = '✏️ Edit Obligation';
+          document.getElementById('obligation-edit-id').value = ob.id;
+          document.getElementById('obligation-name-input').value = ob.name;
+          document.getElementById('obligation-amount-input').value = (ob.amountCents / 100).toFixed(2);
+          document.getElementById('obligation-date-input').value = ob.dueDate;
+          document.getElementById('modal-add-obligation').style.display = 'flex';
+        }
+      };
+    });
+
+    list.querySelectorAll('[data-del-ob]').forEach(btn => {
+      btn.onclick = () => {
+        state.obligations = state.obligations.filter(o => o.id !== btn.dataset.delOb);
+        StorageController.saveState(state);
+        playHapticClick();
+        renderObligations();
+        renderDashboard();
       };
     });
   }
@@ -195,12 +257,14 @@
           <div class="item-info">
             <div class="item-title">${item.name}</div>
             <div class="item-sub">
-              ${cd.isUnlocked ? '<span style="color:var(--color-primary);font-weight:700;">🔓 48h Passed — Do you still want this?</span>' : `⏳ Cooling down: ${cd.remainingHours}h remaining`}
+              ${cd.isUnlocked ? '<span style="color:var(--color-primary);font-weight:700;">🔓 48h Passed — Clear mind achieved!</span>' : `⏳ Cooling down: ${cd.remainingHours}h remaining`}
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-actions-row">
             <div class="item-amount">${FinanceEngine.formatCents(item.amountCents, state.profile.currency)}</div>
-            <button type="button" class="icon-action-btn" data-delete-pause="${item.id}" title="Delete or Dismiss" style="color:var(--color-rose);">&times;</button>
+            <button type="button" class="btn-check-toggle active" data-delete-pause="${item.id}" title="Let It Go (Save Money!)">🎉 Let It Go</button>
+            <button type="button" class="btn-card-edit" data-buy-pause="${item.id}" title="Buy & Log Spend">🛒 Buy</button>
+            <button type="button" class="btn-card-edit" data-edit-pause="${item.id}" title="Edit Item">✏️</button>
           </div>
         </div>
       `;
@@ -214,6 +278,40 @@
         renderWishlistPause();
       };
     });
+
+    list.querySelectorAll('[data-buy-pause]').forEach(btn => {
+      btn.onclick = () => {
+        const item = state.wishlistPauseItems.find(i => i.id === btn.dataset.buyPause);
+        if (item) {
+          state.transactions.unshift({
+            id: 'tx-' + Date.now(),
+            timestamp: Date.now(),
+            date: new Date().toISOString().slice(0, 10),
+            title: item.name,
+            amountCents: item.amountCents
+          });
+          state.wishlistPauseItems = state.wishlistPauseItems.filter(i => i.id !== item.id);
+          StorageController.saveState(state);
+          playHapticClick();
+          renderWishlistPause();
+          renderDashboard();
+        }
+      };
+    });
+
+    list.querySelectorAll('[data-edit-pause]').forEach(btn => {
+      btn.onclick = () => {
+        const item = state.wishlistPauseItems.find(i => i.id === btn.dataset.editPause);
+        if (item) {
+          const heading = document.getElementById('modal-pause-heading');
+          if (heading) heading.textContent = '✏️ Edit Paused Item';
+          document.getElementById('pause-edit-id').value = item.id;
+          document.getElementById('pause-name-input').value = item.name;
+          document.getElementById('pause-amount-input').value = (item.amountCents / 100).toFixed(2);
+          document.getElementById('modal-add-pause').style.display = 'flex';
+        }
+      };
+    });
   }
 
   function renderPayoff() {
@@ -221,7 +319,7 @@
     const list = document.getElementById('payoff-list');
     if (!state.debts || state.debts.length === 0) {
       if (summary) summary.textContent = '🎉 Debt Free! Zero liabilities recorded.';
-      if (list) list.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-sub);">No debts in your portfolio. Great work!</div>`;
+      if (list) list.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-sub);">No debts in your portfolio. Tap + Add Debt above to track cards or loans.</div>`;
       return;
     }
 
@@ -237,9 +335,38 @@
             <div class="item-title">${d.name}</div>
             <div class="item-sub">Min: ${FinanceEngine.formatCents(d.minPaymentCents, state.profile.currency)}/mo • ${d.interestRate}% APR</div>
           </div>
-          <div class="item-amount">${FinanceEngine.formatCents(d.balanceCents, state.profile.currency)}</div>
+          <div class="card-actions-row">
+            <div class="item-amount">${FinanceEngine.formatCents(d.balanceCents, state.profile.currency)}</div>
+            <button type="button" class="btn-card-edit" data-edit-debt="${d.id}" title="Edit Debt">✏️ Edit</button>
+            <button type="button" class="btn-card-delete" data-del-debt="${d.id}" title="Remove Debt">&times;</button>
+          </div>
         </div>
       `).join('');
+
+      list.querySelectorAll('[data-edit-debt]').forEach(btn => {
+        btn.onclick = () => {
+          const d = state.debts.find(item => item.id === btn.dataset.editDebt);
+          if (d) {
+            const heading = document.getElementById('modal-debt-heading');
+            if (heading) heading.textContent = '✏️ Edit Debt Account';
+            document.getElementById('debt-edit-id').value = d.id;
+            document.getElementById('debt-name-input').value = d.name;
+            document.getElementById('debt-balance-input').value = (d.balanceCents / 100).toFixed(2);
+            document.getElementById('debt-min-input').value = (d.minPaymentCents / 100).toFixed(2);
+            document.getElementById('debt-apr-input').value = d.interestRate;
+            document.getElementById('modal-add-debt').style.display = 'flex';
+          }
+        };
+      });
+
+      list.querySelectorAll('[data-del-debt]').forEach(btn => {
+        btn.onclick = () => {
+          state.debts = state.debts.filter(item => item.id !== btn.dataset.delDebt);
+          StorageController.saveState(state);
+          playHapticClick();
+          renderPayoff();
+        };
+      });
     }
   }
 
@@ -250,6 +377,21 @@
     }
   }
 
+  function renderPreferences() {
+    const chkInput = document.getElementById('settings-checking-balance');
+    if (chkInput && state) {
+      chkInput.value = (state.checkingCents / 100).toFixed(2);
+    }
+    const cycSelect = document.getElementById('settings-income-cycle');
+    if (cycSelect && state) {
+      cycSelect.value = state.incomeCycle || 'biweekly';
+    }
+    const themeSelect = document.getElementById('settings-theme-select');
+    if (themeSelect && state && state.profile) {
+      themeSelect.value = state.profile.theme || 'emerald-modern';
+    }
+  }
+
   function renderCurrentScreen() {
     renderHeader();
     if (currentScreen === 'dashboard') renderDashboard();
@@ -257,6 +399,7 @@
     if (currentScreen === 'pause') renderWishlistPause();
     if (currentScreen === 'payoff') renderPayoff();
     if (currentScreen === 'scratchpad') renderScratchpad();
+    if (currentScreen === 'preferences') renderPreferences();
   }
 
   function bindUI() {
@@ -311,6 +454,7 @@
       modalPayday.style.display = 'none';
       playHapticClick();
       renderDashboard();
+      renderPreferences();
     };
 
     // Custom Spend Modal
@@ -351,8 +495,14 @@
       };
     }
 
-    // Add Obligation Modal
+    // Add / Edit Obligation Modal
     document.getElementById('btn-open-add-obligation').onclick = () => {
+      const heading = document.getElementById('modal-obligation-heading');
+      if (heading) heading.textContent = '📅 Add Obligation';
+      document.getElementById('obligation-edit-id').value = '';
+      document.getElementById('obligation-name-input').value = '';
+      document.getElementById('obligation-amount-input').value = '';
+      document.getElementById('obligation-date-input').value = new Date().toISOString().slice(0, 10);
       document.getElementById('modal-add-obligation').style.display = 'flex';
     };
     document.getElementById('btn-close-add-obligation').onclick = () => {
@@ -360,17 +510,27 @@
     };
     document.getElementById('form-add-obligation').onsubmit = (e) => {
       e.preventDefault();
-      const name = document.getElementById('obligation-name-input').value;
+      const editId = document.getElementById('obligation-edit-id').value;
+      const name = document.getElementById('obligation-name-input').value.trim();
       const amt = FinanceEngine.parseToCents(document.getElementById('obligation-amount-input').value);
       const date = document.getElementById('obligation-date-input').value;
       if (name && amt > 0 && date) {
-        state.obligations.push({
-          id: 'ob-' + Date.now(),
-          name: name,
-          amountCents: amt,
-          dueDate: date,
-          paid: false
-        });
+        if (editId) {
+          const ob = state.obligations.find(o => o.id === editId);
+          if (ob) {
+            ob.name = name;
+            ob.amountCents = amt;
+            ob.dueDate = date;
+          }
+        } else {
+          state.obligations.push({
+            id: 'ob-' + Date.now(),
+            name: name,
+            amountCents: amt,
+            dueDate: date,
+            paid: false
+          });
+        }
         StorageController.saveState(state);
         document.getElementById('modal-add-obligation').style.display = 'none';
         playHapticClick();
@@ -379,8 +539,13 @@
       }
     };
 
-    // Add Wishlist Pause Modal
+    // Add / Edit Wishlist Pause Modal
     document.getElementById('btn-open-add-pause').onclick = () => {
+      const heading = document.getElementById('modal-pause-heading');
+      if (heading) heading.textContent = '⏳ Wishlist Pause (48h Vault)';
+      document.getElementById('pause-edit-id').value = '';
+      document.getElementById('pause-name-input').value = '';
+      document.getElementById('pause-amount-input').value = '';
       document.getElementById('modal-add-pause').style.display = 'flex';
     };
     document.getElementById('btn-close-add-pause').onclick = () => {
@@ -388,21 +553,87 @@
     };
     document.getElementById('form-add-pause').onsubmit = (e) => {
       e.preventDefault();
-      const name = document.getElementById('pause-name-input').value;
+      const editId = document.getElementById('pause-edit-id').value;
+      const name = document.getElementById('pause-name-input').value.trim();
       const amt = FinanceEngine.parseToCents(document.getElementById('pause-amount-input').value);
       if (name && amt > 0) {
-        state.wishlistPauseItems.push({
-          id: 'wp-' + Date.now(),
-          name: name,
-          amountCents: amt,
-          parkedAt: Date.now()
-        });
+        if (editId) {
+          const item = state.wishlistPauseItems.find(i => i.id === editId);
+          if (item) {
+            item.name = name;
+            item.amountCents = amt;
+          }
+        } else {
+          state.wishlistPauseItems.push({
+            id: 'wp-' + Date.now(),
+            name: name,
+            amountCents: amt,
+            parkedAt: Date.now()
+          });
+        }
         StorageController.saveState(state);
         document.getElementById('modal-add-pause').style.display = 'none';
         playHapticClick();
         renderWishlistPause();
       }
     };
+
+    // Add / Edit Debt Modal
+    const modalDebt = document.getElementById('modal-add-debt');
+    const btnOpenAddDebt = document.getElementById('btn-open-add-debt');
+    if (btnOpenAddDebt && modalDebt) {
+      btnOpenAddDebt.onclick = () => {
+        const heading = document.getElementById('modal-debt-heading');
+        if (heading) heading.textContent = '📉 Add Debt Account';
+        document.getElementById('debt-edit-id').value = '';
+        document.getElementById('debt-name-input').value = '';
+        document.getElementById('debt-balance-input').value = '';
+        document.getElementById('debt-min-input').value = '';
+        document.getElementById('debt-apr-input').value = '';
+        modalDebt.style.display = 'flex';
+      };
+    }
+    const btnCloseAddDebt = document.getElementById('btn-close-add-debt');
+    if (btnCloseAddDebt && modalDebt) {
+      btnCloseAddDebt.onclick = () => {
+        modalDebt.style.display = 'none';
+      };
+    }
+    const formAddDebt = document.getElementById('form-add-debt');
+    if (formAddDebt && modalDebt) {
+      formAddDebt.onsubmit = (e) => {
+        e.preventDefault();
+        const editId = document.getElementById('debt-edit-id').value;
+        const name = document.getElementById('debt-name-input').value.trim();
+        const bal = FinanceEngine.parseToCents(document.getElementById('debt-balance-input').value);
+        const min = FinanceEngine.parseToCents(document.getElementById('debt-min-input').value);
+        const apr = parseFloat(document.getElementById('debt-apr-input').value) || 0;
+        if (name && bal > 0) {
+          if (!state.debts) state.debts = [];
+          if (editId) {
+            const d = state.debts.find(item => item.id === editId);
+            if (d) {
+              d.name = name;
+              d.balanceCents = bal;
+              d.minPaymentCents = min;
+              d.interestRate = apr;
+            }
+          } else {
+            state.debts.push({
+              id: 'debt-' + Date.now(),
+              name: name,
+              balanceCents: bal,
+              minPaymentCents: min,
+              interestRate: apr
+            });
+          }
+          StorageController.saveState(state);
+          modalDebt.style.display = 'none';
+          playHapticClick();
+          renderPayoff();
+        }
+      };
+    }
 
     // Chloe Contextual Help Badges Modal
     const modalChloeHelp = document.getElementById('modal-chloe-help');

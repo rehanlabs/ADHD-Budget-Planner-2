@@ -120,6 +120,8 @@
           <!-- 4 slots 2x2 grid populated dynamically -->
         </div>
 
+        <div id="today-spends-container"></div>
+
         <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:16px;margin-top:14px;">
           <div style="font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:6px;">💡 Chloe's Golden Rule:</div>
           <p style="font-size:12px;color:var(--text-sub);line-height:1.6;">
@@ -164,12 +166,15 @@
 
       <!-- 4. Payoff Plan Screen -->
       <section id="screen-payoff" class="screen">
-        <div style="margin-bottom:16px;">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <h2 style="font-size:18px;font-weight:800;">Payoff Plan (Debt Crusher)</h2>
-            <button type="button" class="nordic-help-badge" data-chloe-help="payoff.radar" title="About Debt Payoff Plan">?</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <h2 style="font-size:18px;font-weight:800;">Payoff Plan (Debt Crusher)</h2>
+              <button type="button" class="nordic-help-badge" data-chloe-help="payoff.radar" title="About Debt Payoff Plan">?</button>
+            </div>
+            <p style="font-size:12px;color:var(--text-sub);">Snowball & Avalanche accelerated debt freedom path.</p>
           </div>
-          <p style="font-size:12px;color:var(--text-sub);">Snowball & Avalanche accelerated debt freedom path.</p>
+          <button type="button" class="btn-primary-action" id="btn-open-add-debt">+ Add Debt</button>
         </div>
         <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;">
           <div style="font-size:11px;font-weight:700;color:var(--color-gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Freedom Projection</div>
@@ -310,14 +315,15 @@
       </div>
     </div>
 
-    <!-- MODAL: Add Obligation -->
+    <!-- MODAL: Add / Edit Obligation -->
     <div id="modal-add-obligation" class="modal-overlay">
       <div class="modal-box">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <h3 style="font-size:16px;font-weight:800;">📅 Add Obligation</h3>
+          <h3 style="font-size:16px;font-weight:800;" id="modal-obligation-heading">📅 Add Obligation</h3>
           <button type="button" class="icon-action-btn" id="btn-close-add-obligation" style="width:28px;height:28px;">&times;</button>
         </div>
         <form id="form-add-obligation">
+          <input type="hidden" id="obligation-edit-id" value="">
           <div class="form-group">
             <label>Obligation Name (e.g. Rent, Wi-Fi, Phone)</label>
             <input type="text" class="form-input" id="obligation-name-input" placeholder="Apartment Rent" required>
@@ -335,14 +341,15 @@
       </div>
     </div>
 
-    <!-- MODAL: Add Wishlist Pause Item -->
+    <!-- MODAL: Add / Edit Wishlist Pause Item -->
     <div id="modal-add-pause" class="modal-overlay">
       <div class="modal-box">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <h3 style="font-size:16px;font-weight:800;">⏳ Wishlist Pause (48h Vault)</h3>
+          <h3 style="font-size:16px;font-weight:800;" id="modal-pause-heading">⏳ Wishlist Pause (48h Vault)</h3>
           <button type="button" class="icon-action-btn" id="btn-close-add-pause" style="width:28px;height:28px;">&times;</button>
         </div>
         <form id="form-add-pause">
+          <input type="hidden" id="pause-edit-id" value="">
           <div class="form-group">
             <label>Item Name / Purchase Urge</label>
             <input type="text" class="form-input" id="pause-name-input" placeholder="New Wireless Earbuds" required>
@@ -351,7 +358,37 @@
             <label>Price ($)</label>
             <input type="number" step="0.01" class="form-input" id="pause-amount-input" placeholder="99.00" required>
           </div>
-          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Pause for 48 Hours ⏳</button>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Save to 48h Vault ⏳</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Add / Edit Debt -->
+    <div id="modal-add-debt" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;" id="modal-debt-heading">📉 Add Debt Account</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-add-debt" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-add-debt">
+          <input type="hidden" id="debt-edit-id" value="">
+          <div class="form-group">
+            <label>Account Name (e.g. Visa Card, Car Loan)</label>
+            <input type="text" class="form-input" id="debt-name-input" placeholder="Visa Credit Card" required>
+          </div>
+          <div class="form-group">
+            <label>Current Balance ($)</label>
+            <input type="number" step="0.01" class="form-input" id="debt-balance-input" placeholder="850.00" required>
+          </div>
+          <div class="form-group">
+            <label>Minimum Monthly Payment ($)</label>
+            <input type="number" step="0.01" class="form-input" id="debt-min-input" placeholder="35.00" required>
+          </div>
+          <div class="form-group">
+            <label>Interest Rate (APR %)</label>
+            <input type="number" step="0.1" class="form-input" id="debt-apr-input" placeholder="19.9" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Save Debt Account 📉</button>
         </form>
       </div>
     </div>
