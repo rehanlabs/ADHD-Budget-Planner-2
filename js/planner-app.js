@@ -490,19 +490,20 @@
     bindUI();
     setScreen('dashboard');
 
-    // Automatic First-Time Onboarding Walkthrough
-    const hasAutoGuided = localStorage.getItem('adhd_chloe_auto_guided') === 'true';
+    // Automatic First-Time Onboarding Walkthrough (Only marked done when user exits/completes tour)
+    const hasAutoGuided = localStorage.getItem('adhd_chloe_tour_v2_done') === 'true';
     if (!hasAutoGuided) {
       setTimeout(() => {
         if (window.ChloeTour && typeof window.ChloeTour.startTour === 'function') {
           window.ChloeTour.startTour();
-          localStorage.setItem('adhd_chloe_auto_guided', 'true');
         }
-      }, 500);
+      }, 450);
     }
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        if (reg && typeof reg.update === 'function') reg.update();
+      }).catch(() => {});
     }
   }
 

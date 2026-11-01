@@ -19,13 +19,19 @@ body {
 }
 
 .adhd-container {
-  max-width: 580px;
+  width: 100%;
+  max-width: 760px;
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-bottom: calc(125px + env(safe-area-inset-bottom, 24px));
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 20px));
   position: relative;
+  overflow-x: clip;
+}
+
+body.tutorial-active .adhd-container {
+  padding-bottom: calc(230px + env(safe-area-inset-bottom, 20px));
 }
 
 /* Header App Bar */
@@ -188,6 +194,8 @@ body {
   border-radius: 12px;
   padding: 10px 14px;
   display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
@@ -198,19 +206,26 @@ body {
   color: var(--text-main);
 }
 
-/* Quick Spends Grid */
+/* Quick Spends Grid (True 2x2 on Mobile, 4x1 on Desktop) */
 .quick-spend-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 22px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+@media (min-width: 640px) {
+  .quick-spend-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
 }
 
 .spend-tile-btn {
   background: var(--bg-panel);
   border: 1px solid var(--border-line);
   border-radius: 14px;
-  padding: 12px 6px;
+  padding: 14px 10px;
   text-align: center;
   cursor: pointer;
   transition: var(--transition-quick);
@@ -218,7 +233,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
 }
 
 .spend-tile-btn:hover {
@@ -227,9 +244,9 @@ body {
   transform: translateY(-2px);
 }
 
-.spend-tile-icon { font-size: 20px; }
-.spend-tile-title { font-size: 11px; font-weight: 700; }
-.spend-tile-amt { font-size: 11px; font-family: var(--font-mono); color: var(--color-gold); }
+.spend-tile-icon { font-size: 22px; }
+.spend-tile-title { font-size: 12px; font-weight: 700; }
+.spend-tile-amt { font-size: 12px; font-family: var(--font-mono); color: var(--color-gold); }
 
 /* Item Cards (Bills, Vault, Debt) */
 .item-card {
@@ -335,32 +352,32 @@ body {
   cursor: pointer;
 }
 
-/* Top Segmented Nordic Capsule Navigation (Unique Top Architecture) */
+/* Top Segmented Nordic Capsule Navigation (3x2 Grid on Mobile, 6x1 Full-Width Grid on Desktop) */
 .nordic-capsule-nav {
-  position: sticky;
-  top: 59px;
+  position: relative;
   z-index: 35;
-  background: rgba(7, 15, 26, 0.95);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(7, 15, 26, 0.98);
   border-bottom: 1px solid var(--border-line);
-  padding: 8px 12px;
-  display: flex;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  width: 100%;
 }
 
-.nordic-capsule-nav::-webkit-scrollbar {
-  display: none;
+@media (min-width: 620px) {
+  .nordic-capsule-nav {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    padding: 10px 18px;
+  }
 }
 
 .capsule-tab {
   background: rgba(21, 39, 64, 0.55);
   border: 1px solid rgba(56, 189, 248, 0.16);
   color: var(--text-sub);
-  padding: 7px 13px;
+  padding: 8px 6px;
   border-radius: var(--radius-pill);
   font-size: 12px;
   font-weight: 700;
@@ -368,9 +385,11 @@ body {
   white-space: nowrap;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   transition: var(--transition-quick);
-  flex-shrink: 0;
+  min-width: 0;
+  width: 100%;
 }
 
 .capsule-tab:hover {
@@ -409,59 +428,60 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* Floating Quick Action HUD (Replaces bottom dock) */
+/* Action Bar (Non-Overlapping Dock Bar) */
 .nordic-floating-hud {
-  position: fixed;
-  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 24px);
-  max-width: 520px;
+  width: 100%;
+  padding: 4px 18px 24px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 50;
-  pointer-events: none;
+  gap: 10px;
 }
 
 .hud-shield-btn {
-  pointer-events: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: rgba(14, 27, 44, 0.94);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(56, 189, 248, 0.3);
   color: #99f6e4;
-  padding: 9px 15px;
+  padding: 11px 14px;
   border-radius: var(--radius-pill);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 800;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: var(--transition-quick);
 }
 
 .hud-shield-btn:hover {
   border-color: #2dd4bf;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .hud-spend-btn {
-  pointer-events: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: linear-gradient(135deg, #10b981, #0891b2);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 18px;
+  padding: 11px 16px;
   border-radius: var(--radius-pill);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 800;
-  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
   cursor: pointer;
   transition: var(--transition-quick);
 }
 
 .hud-spend-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.55);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
 }
 
 /* Modals */
@@ -525,19 +545,66 @@ body {
 }
 
 /* Mobile Portrait Responsiveness Tweaks */
-@media (max-width: 420px) {
-  .hero-number {
-    font-size: 38px;
+@media (max-width: 480px) {
+  .adhd-header {
+    padding: 8px 10px;
+  }
+  .brand-badge {
+    gap: 6px;
+    min-width: 0;
+  }
+  .brand-icon {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+  .brand-titles h1 {
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+  .adhd-header .nordic-help-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+  .brand-subtitle {
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  .header-actions {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .pill-action-btn {
+    padding: 4px 7px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .icon-action-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .nordic-capsule-nav {
+    padding: 8px 10px;
+    gap: 5px;
   }
   .capsule-tab {
-    padding: 6px 11px;
+    padding: 7px 4px;
     font-size: 11px;
     gap: 4px;
+  }
+  .hero-number {
+    font-size: 36px;
   }
   .hero-split-card {
     padding: 16px 14px;
   }
   .screen {
-    padding: 14px 12px;
+    padding: 12px 10px;
+  }
+  .nordic-floating-hud {
+    padding: 2px 10px 20px 10px;
   }
 }

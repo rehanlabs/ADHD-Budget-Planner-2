@@ -271,7 +271,7 @@
     if (mask) mask.classList.remove('active');
 
     try {
-      localStorage.setItem('chloe_tour_completed', 'true');
+      localStorage.setItem('adhd_chloe_tour_v2_done', 'true');
     } catch (e) {}
 
     // Return to dashboard screen smoothly
