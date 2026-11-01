@@ -123,11 +123,11 @@
     {
       title: 'Fixed Obligations (Bills)',
       body: 'Head over to <strong>Obligations</strong>. This is where your rent, electricity, and Wi-Fi live. When you get paid, money is automatically set aside for them.',
-      target: '.nav-tab[data-nav="obligations"]',
+      target: '.capsule-tab[data-nav="obligations"]',
       badge: '📅 Tap Obligations Tab',
       actionText: 'View Obligations ➔',
       action: async (controller) => {
-        const tab = document.querySelector('.nav-tab[data-nav="obligations"]');
+        const tab = document.querySelector('.capsule-tab[data-nav="obligations"]');
         if (tab) tab.click();
         await wait(300);
         controller.next();
@@ -136,11 +136,11 @@
     {
       title: 'Wishlist Pause (48h Impulse Vault)',
       body: 'Suddenly want that fancy tech gadget or hobby gear online? Put it in <strong>Wishlist Pause</strong>. In 48 hours, the dopamine wave fades and 82% of impulses vanish guilt-free!',
-      target: '.nav-tab[data-nav="pause"]',
+      target: '.capsule-tab[data-nav="pause"]',
       badge: '⏳ Tap Wishlist Pause',
       actionText: 'Explore Pause Shelf ➔',
       action: async (controller) => {
-        const tab = document.querySelector('.nav-tab[data-nav="pause"]');
+        const tab = document.querySelector('.capsule-tab[data-nav="pause"]');
         if (tab) tab.click();
         await wait(300);
         controller.next();

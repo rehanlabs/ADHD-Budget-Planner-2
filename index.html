@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ADHD Budget Planner</title>
-  <meta name="description" content="A calm, offline, low-stimulation budget planner engineered for ADHD brains. What is safe to spend today, impulse control, and debt freedom.">
+  <meta name="description" content="Ultra low-friction personal finance app engineered for neurodivergent focus.">
   <meta name="theme-color" content="#0d9488">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ADHD Budget Planner">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  
   <link rel="stylesheet" href="./css/planner-theme.css">
   <link rel="stylesheet" href="./css/planner-layout.css">
   <link rel="stylesheet" href="./css/chloe-tour.css">
@@ -25,24 +25,57 @@
     <header class="adhd-header">
       <div class="header-row">
         <div class="brand-badge">
-          <div class="brand-icon">🌱</div>
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
           <div class="brand-titles">
             <h1>ADHD Budget Planner</h1>
-            <span class="brand-subtitle">Clarity & Focus</span>
+            <span class="brand-subtitle">Nordic Glass Edition</span>
           </div>
         </div>
         <div class="header-actions">
-          <button type="button" class="pill-action-btn" id="btn-burnout-shield" title="Burnout Shield (Emergency Mode)">🛡️ Burnout Shield</button>
+          <button type="button" class="pill-action-btn" id="btn-burnout-shield" title="Burnout Shield (Emergency Mode)">🛡️ Shield</button>
           <button type="button" class="icon-action-btn" id="btn-launch-tour" title="Chloe's Guided Tour">👩‍💻</button>
           <button type="button" class="icon-action-btn" id="btn-toggle-sound" title="Haptic Audio">🔔</button>
         </div>
       </div>
     </header>
 
+    <!-- TOP CAPSULE NAVIGATION BAR (Replaces Bottom Dock for Unique Layout) -->
+    <nav class="nordic-capsule-nav" id="capsule-nav" aria-label="Primary Navigation">
+      <button type="button" class="capsule-tab active" data-nav="dashboard">
+        <span class="tab-emoji">⚡</span>
+        <span class="tab-text">Dashboard</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="obligations">
+        <span class="tab-emoji">📋</span>
+        <span class="tab-text">Obligations</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="pause">
+        <span class="tab-emoji">⏳</span>
+        <span class="tab-text">Wishlist</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="payoff">
+        <span class="tab-emoji">📉</span>
+        <span class="tab-text">Payoff</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="scratchpad">
+        <span class="tab-emoji">📝</span>
+        <span class="tab-text">Notes</span>
+      </button>
+      <button type="button" class="capsule-tab" data-nav="preferences">
+        <span class="tab-emoji">⚙️</span>
+        <span class="tab-text">Config</span>
+      </button>
+    </nav>
+
     <!-- MAIN SCREENS -->
     <main>
       <!-- 1. Dashboard Screen -->
       <section id="screen-dashboard" class="screen active">
+        <!-- Split Dual-Column Glass Hero -->
         <div class="hero-split-card">
           <div class="hero-main-section">
             <div class="hero-label"><span>✨</span> Safe to Spend Today</div>
@@ -54,17 +87,31 @@
           </div>
         </div>
 
-        <div style="font-size:12px;font-weight:800;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">
-          ⚡ Fast Tap Spends
+        <!-- Interactive Next Payday & Income Card -->
+        <div class="payday-inflow-card" id="card-payday-inflow">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="inflow-badge">💵 Next Payday & Income</span>
+            <button type="button" class="pill-action-btn" id="btn-edit-payday" style="font-size:11px;padding:3px 9px;">⚙️ Set Payday</button>
+          </div>
+          <div id="inflow-details-display" style="font-size:14px;font-weight:800;color:var(--text-main);">
+            Loading schedule...
+          </div>
+          <div id="inflow-runway-countdown" style="font-size:12px;color:var(--color-accent);margin-top:3px;">
+            Calculating runway...
+          </div>
         </div>
-        <div class="quick-spend-grid" id="quick-spend-grid" style="grid-template-columns: repeat(2, 1fr);">
+
+        <div style="font-size:12px;font-weight:800;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">
+          ⚡ 2x2 Fast Tap Spends
+        </div>
+        <div class="quick-spend-grid" id="quick-spend-grid">
           <!-- 4 slots 2x2 grid populated dynamically -->
         </div>
 
-        <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:16px;">
-          <div style="font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:6px;">💡 ADHD Golden Rule:</div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border-line);border-radius:14px;padding:16px;margin-top:14px;">
+          <div style="font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:6px;">💡 Chloe's Golden Rule:</div>
           <p style="font-size:12px;color:var(--text-sub);line-height:1.6;">
-            Before purchasing anything non-essential, glance at Safe to Spend Today. If your allowance is green, spend guilt-free knowing fixed commitments are already reserved!
+            Before tapping to buy, glance at your Safe to Spend Today number. If it is green, you can spend guilt-free knowing fixed commitments are already reserved!
           </p>
         </div>
       </section>
@@ -159,55 +206,15 @@
       </section>
     </main>
 
-    <!-- Bottom Navigation Dock -->
-    <nav class="nav-dock" aria-label="Main Navigation">
-      <button type="button" class="nav-tab active" data-nav="dashboard">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <circle cx="12" cy="12" r="9"/>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/>
-        </svg>
-        <span>Dashboard</span>
+    <!-- Bottom Floating Quick HUD -->
+    <div class="nordic-floating-hud" id="nordic-floating-hud">
+      <button type="button" class="hud-shield-btn" id="hud-btn-shield" title="Toggle Burnout Shield">
+        🛡️ Burnout Shield
       </button>
-
-      <button type="button" class="nav-tab" data-nav="obligations">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-        </svg>
-        <span>Obligations</span>
+      <button type="button" class="hud-spend-btn" id="hud-btn-add-spend" title="Log Custom Spend">
+        ⚡ + Custom Spend
       </button>
-
-      <button type="button" class="nav-tab" data-nav="pause">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-        <span>Pause</span>
-      </button>
-
-      <button type="button" class="nav-tab" data-nav="payoff">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-        </svg>
-        <span>Payoff</span>
-      </button>
-
-      <button type="button" class="nav-tab" data-nav="scratchpad">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-        </svg>
-        <span>Scratchpad</span>
-      </button>
-
-      <button type="button" class="nav-tab" data-nav="preferences">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <circle cx="12" cy="12" r="3"/>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
-        </svg>
-        <span>Preferences</span>
-      </button>
-    </nav>
+    </div>
 
     <!-- FULLSCREEN BURNOUT SHIELD OVERLAY -->
     <div id="burnout-shield-overlay" class="zombie-overlay">
@@ -216,6 +223,61 @@
       <div style="font-size:14px;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Safe to Spend Today</div>
       <div class="zombie-hero-number" id="shield-hero-amount">$0.00</div>
       <button type="button" class="btn-zombie-exit" id="btn-exit-shield">Exit Burnout Shield 🌿</button>
+    </div>
+
+    <!-- MODAL: Set Payday & Income -->
+    <div id="modal-set-payday" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;">💵 Set Next Payday & Income</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-set-payday" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-set-payday">
+          <div class="form-group">
+            <label>Next Payday Date</label>
+            <input type="date" class="form-input" id="input-payday-date" required>
+          </div>
+          <div class="form-group">
+            <label>Expected Paycheck Amount ($)</label>
+            <input type="number" step="0.01" class="form-input" id="input-payday-amount" placeholder="2400.00" required>
+          </div>
+          <div class="form-group">
+            <label>Pay Frequency</label>
+            <select class="form-select" id="select-payday-cycle">
+              <option value="biweekly">Bi-Weekly (Every 2 Weeks)</option>
+              <option value="weekly">Weekly (Every 7 Days)</option>
+              <option value="semimonthly">Semi-Monthly (1st & 15th)</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Current Checking Balance ($)</label>
+            <input type="number" step="0.01" class="form-input" id="input-payday-checking" placeholder="1250.00" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Update Payday & Runway 🚀</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Custom Quick Spend -->
+    <div id="modal-custom-spend" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:800;">⚡ Log Custom Spend</h3>
+          <button type="button" class="icon-action-btn" id="btn-close-custom-spend" style="width:28px;height:28px;">&times;</button>
+        </div>
+        <form id="form-custom-spend">
+          <div class="form-group">
+            <label>Spend Title / Description</label>
+            <input type="text" class="form-input" id="input-custom-spend-title" placeholder="Coffee & Croissant" required>
+          </div>
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" step="0.01" class="form-input" id="input-custom-spend-amt" placeholder="8.50" required>
+          </div>
+          <button type="submit" class="btn-primary-action" style="width:100%;padding:12px;margin-top:6px;">Log Spend Now ⚡</button>
+        </form>
+      </div>
     </div>
 
     <!-- MODAL: Add Obligation -->
