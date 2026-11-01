@@ -1,5 +1,5 @@
-// ADHD Budget Planner - Service Worker (Offline PWA Engine v2.2.0)
-const CACHE_NAME = 'adhd-budget-planner-v2.2.0';
+// ADHD Budget Planner - Service Worker (Offline PWA Engine v2.3.0)
+const CACHE_NAME = 'adhd-budget-planner-v2.3.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

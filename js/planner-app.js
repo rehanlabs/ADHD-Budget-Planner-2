@@ -41,6 +41,21 @@
     renderCurrentScreen();
   }
 
+  window.setPlannerScreen = setScreen;
+  window.reloadPlannerState = function (newState) {
+    if (newState) {
+      state = newState;
+      StorageController.saveState(state);
+    } else {
+      state = StorageController.loadState();
+    }
+    document.body.dataset.theme = (state.profile && state.profile.theme) || 'emerald-modern';
+    renderCurrentScreen();
+  };
+  window.getPlannerState = function () {
+    return state;
+  };
+
   function renderHeader() {
     const soundBtn = document.getElementById('btn-toggle-sound');
     if (soundBtn) {
@@ -491,7 +506,7 @@
     setScreen('dashboard');
 
     // Automatic First-Time Onboarding Walkthrough (Only marked done when user exits/completes tour)
-    const hasAutoGuided = localStorage.getItem('adhd_chloe_tour_v2_done') === 'true';
+    const hasAutoGuided = localStorage.getItem('adhd_chloe_tour_v3_done') === 'true';
     if (!hasAutoGuided) {
       setTimeout(() => {
         if (window.ChloeTour && typeof window.ChloeTour.startTour === 'function') {
