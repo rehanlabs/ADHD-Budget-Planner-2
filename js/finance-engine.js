@@ -1,6 +1,7 @@
 /**
  * ADHD Budget Planner - Core Financial Engine (Edition 2)
- * High-precision integer cent financial math, payday projection, and debt payoff simulations.
+ * High-precision integer cent financial math, payday projection, weekend adjustment,
+ * anti-double-counting protection, and debt payoff amortization.
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -17,58 +18,169 @@
       if (!isFinite(amount)) return 0;
       return Math.round(amount * 100);
     }
-    const clean = String(amount).replace(/[^0-9.-]/g, '');
+    const str = String(amount).trim();
+    if (!str) return 0;
+    const isNegative = str.startsWith('-') || str.includes('(');
+    const clean = str.replace(/[^0-9.]/g, '');
     const parsed = parseFloat(clean);
-    return isNaN(parsed) ? 0 : Math.round(parsed * 100);
+    if (isNaN(parsed) || !isFinite(parsed)) return 0;
+    const cents = Math.round(parsed * 100);
+    return isNegative ? -cents : cents;
   }
 
   function formatCents(cents, currency = 'USD') {
-    const val = (Number(cents) || 0) / 100;
+    const isNeg = Number(cents) < 0;
+    const absVal = Math.abs(Number(cents) || 0) / 100;
     const symbols = { USD: '$', CAD: '$', AUD: '$', GBP: '£', EUR: '€', JPY: '¥' };
     const sym = symbols[currency] || '$';
-    if (currency === 'JPY') return sym + Math.round(val).toLocaleString();
-    return sym + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    let formatted = '';
+    if (currency === 'JPY') {
+      formatted = sym + Math.round(absVal).toLocaleString('en-US');
+    } else {
+      formatted = sym + absVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    return isNeg ? `-${formatted}` : formatted;
+  }
+
+  function toISODate(d) {
+    const date = d ? new Date(d) : new Date();
+    return date.toISOString().slice(0, 10);
+  }
+
+  function addDays(isoDate, n) {
+    const [y, m, d] = isoDate.split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d, 12));
+    dt.setUTCDate(dt.getUTCDate() + n);
+    return dt.toISOString().slice(0, 10);
+  }
+
+  function diffDays(aISO, bISO) {
+    const [yA, mA, dA] = aISO.split('-').map(Number);
+    const [yB, mB, dB] = bISO.split('-').map(Number);
+    const dtA = Date.UTC(yA, mA - 1, dA, 12);
+    const dtB = Date.UTC(yB, mB - 1, dB, 12);
+    return Math.round((dtB - dtA) / (1000 * 60 * 60 * 24));
+  }
+
+  function adjustWeekendEarly(isoDate) {
+    const [y, m, d] = isoDate.split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d, 12));
+    const day = dt.getUTCDay();
+    if (day === 6) return addDays(isoDate, -1); // Saturday -> Friday
+    if (day === 0) return addDays(isoDate, -2); // Sunday -> Friday
+    return isoDate;
+  }
+
+  function getNextPayday(anchorISO, cycle, todayISO, weekendEarly = true) {
+    const today = todayISO || toISODate();
+    const anchor = anchorISO || today;
+    const adjustedAnchor = weekendEarly ? adjustWeekendEarly(anchor) : anchor;
+
+    if (adjustedAnchor > today) {
+      return { date: adjustedAnchor, rawDate: anchor };
+    }
+
+    if (cycle === 'weekly' || cycle === 'biweekly') {
+      const step = cycle === 'weekly' ? 7 : 14;
+      let curr = anchor;
+      while (true) {
+        const next = addDays(curr, step);
+        const actual = weekendEarly ? adjustWeekendEarly(next) : next;
+        if (actual > today) {
+          return { date: actual, rawDate: next };
+        }
+        curr = next;
+      }
+    } else if (cycle === 'semimonthly') {
+      const [curY, curM] = today.split('-').map(Number);
+      const candidates = [];
+      for (let y = curY; y <= curY + 1; y++) {
+        for (let m = 1; m <= 12; m++) {
+          const daysInM = new Date(Date.UTC(y, m, 0)).getUTCDate();
+          [1, 15, Math.min(30, daysInM), daysInM].forEach(day => {
+            const iso = `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const actual = weekendEarly ? adjustWeekendEarly(iso) : iso;
+            if (actual > today) {
+              candidates.push({ date: actual, rawDate: iso });
+            }
+          });
+        }
+      }
+      candidates.sort((a, b) => a.date.localeCompare(b.date));
+      return candidates[0] || { date: addDays(today, 15), rawDate: addDays(today, 15) };
+    } else { // monthly
+      const dueDay = parseInt(anchor.split('-')[2], 10) || 1;
+      const [curY, curM] = today.split('-').map(Number);
+      for (let y = curY; y <= curY + 1; y++) {
+        const startM = y === curY ? curM : 1;
+        for (let m = startM; m <= 12; m++) {
+          const daysInM = new Date(Date.UTC(y, m, 0)).getUTCDate();
+          const validDay = Math.min(dueDay, daysInM);
+          const iso = `${y}-${String(m).padStart(2, '0')}-${String(validDay).padStart(2, '0')}`;
+          const actual = weekendEarly ? adjustWeekendEarly(iso) : iso;
+          if (actual > today) {
+            return { date: actual, rawDate: iso };
+          }
+        }
+      }
+      return { date: addDays(today, 30), rawDate: addDays(today, 30) };
+    }
   }
 
   function calculateSafeToSpend(state, todayISO) {
-    const today = todayISO || new Date().toISOString().slice(0, 10);
+    const today = todayISO || toISODate();
     const checkingBalance = state.checkingCents || 0;
     const incomeAnchor = state.incomeAnchor || today;
     const incomeCycle = state.incomeCycle || 'biweekly';
 
-    const todayDate = new Date(today + 'T12:00:00Z');
-    let nextIncome = new Date(incomeAnchor + 'T12:00:00Z');
+    const nextPay = getNextPayday(incomeAnchor, incomeCycle, today, true);
+    const daysRunway = Math.max(1, diffDays(today, nextPay.date));
+    const nextPayISO = nextPay.date;
+    const dayBeforePay = addDays(nextPayISO, -1);
 
-    const cycleDays = { weekly: 7, biweekly: 14, monthly: 30, semimonthly: 15 };
-    const step = cycleDays[incomeCycle] || 14;
+    // Anti-Double-Counting Spending Check
+    const balanceUpdatedAt = state.balanceUpdatedAt || 0;
+    let spentThisPeriod = 0;
+    let spentTodayCents = 0;
 
-    while (nextIncome <= todayDate) {
-      nextIncome.setUTCDate(nextIncome.getUTCDate() + step);
-    }
+    (state.transactions || []).forEach(tx => {
+      const txTime = tx.timestamp || (typeof tx.id === 'string' && tx.id.startsWith('tx-') ? parseInt(tx.id.replace('tx-', ''), 10) : 0);
+      let isAfterBalance = false;
+      if (balanceUpdatedAt > 0 && txTime > 0) {
+        isAfterBalance = txTime > balanceUpdatedAt;
+      } else {
+        isAfterBalance = true;
+      }
 
-    const diffMs = nextIncome.getTime() - todayDate.getTime();
-    const daysRunway = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
-    const nextPayISO = nextIncome.toISOString().slice(0, 10);
+      const amt = tx.amountCents || 0;
+      if (isAfterBalance && tx.date <= today) {
+        spentThisPeriod += amt;
+      }
+      if (tx.date === today) {
+        spentTodayCents += amt;
+      }
+    });
+
+    const effectiveChecking = Math.max(0, checkingBalance - spentThisPeriod);
 
     // Sum unpaid bills due before next payday
     let pendingBillsCents = 0;
     (state.bills || []).forEach(bill => {
-      if (!bill.paid && bill.dueDate >= today && bill.dueDate < nextPayISO) {
-        pendingBillsCents += bill.amountCents;
+      const isPaid = bill.paid === true || bill.isPaid === true;
+      const due = bill.dueDate || bill.date;
+      if (!isPaid && due >= today && due <= dayBeforePay) {
+        pendingBillsCents += (bill.amountCents || 0);
       }
     });
 
-    const spendablePool = Math.max(0, checkingBalance - pendingBillsCents);
-    const dailySafeQuota = Math.max(0, Math.floor(spendablePool / daysRunway));
+    const rawSpendablePool = effectiveChecking - pendingBillsCents;
+    const spendablePool = Math.max(0, rawSpendablePool);
 
-    // Deduct today's spent transactions
-    let spentTodayCents = 0;
-    (state.transactions || []).forEach(tx => {
-      if (tx.date === today) {
-        spentTodayCents += tx.amountCents;
-      }
-    });
+    // Starting daily safe pool (adds back today's spend so daily allowance is stable)
+    const startingPoolToday = Math.max(0, rawSpendablePool + spentTodayCents);
+    const dailySafeQuota = Math.max(0, Math.floor(startingPoolToday / daysRunway));
 
+    // Remaining allowance for today (never goes negative - non-punitive absorption)
     const safeToSpendToday = Math.max(0, dailySafeQuota - spentTodayCents);
 
     return {
@@ -120,7 +232,7 @@
         list[i].balance -= pay;
 
         if (list[i].balance <= 0) {
-          extra += list[i].minPayment; // Snowball acceleration
+          extra += list[i].minPayment;
         }
       }
     }
@@ -146,6 +258,11 @@
   return {
     parseToCents,
     formatCents,
+    toISODate,
+    addDays,
+    diffDays,
+    adjustWeekendEarly,
+    getNextPayday,
     calculateSafeToSpend,
     calculateDebtPlan,
     getVaultCountdown

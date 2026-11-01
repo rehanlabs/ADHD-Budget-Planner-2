@@ -94,6 +94,7 @@
           if (qs) {
             state.transactions.unshift({
               id: 'tx-' + Date.now(),
+              timestamp: Date.now(),
               date: new Date().toISOString().slice(0, 10),
               title: qs.title,
               amountCents: qs.amountCents
@@ -324,6 +325,7 @@
     document.getElementById('form-planner-settings').onsubmit = (e) => {
       e.preventDefault();
       state.checkingCents = FinanceEngine.parseToCents(document.getElementById('settings-checking-balance').value);
+      state.balanceUpdatedAt = Date.now();
       state.incomeCycle = document.getElementById('settings-income-cycle').value;
       state.profile.theme = document.getElementById('settings-theme-select').value;
       document.body.dataset.theme = state.profile.theme;
