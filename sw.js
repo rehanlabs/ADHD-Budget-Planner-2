@@ -1,5 +1,5 @@
-// ADHD Budget Planner - Service Worker (Offline PWA Engine v2.5.0)
-const CACHE_NAME = 'adhd-budget-planner-v2.5.0';
+// ADHD Budget Planner - Service Worker (Offline PWA Engine v2.6.0)
+const CACHE_NAME = 'adhd-budget-planner-v2.6.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -41,7 +41,15 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) return cachedResponse;
+      if (cachedResponse) {
+        // Fetch fresh copy in the background if online (stale-while-revalidate)
+        fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+          }
+        }).catch(() => { /* Silent fallback when offline */ });
+        return cachedResponse;
+      }
       return fetch(event.request).catch(() => caches.match('./index.html'));
     })
   );
