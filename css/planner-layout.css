@@ -39,7 +39,7 @@ body.tutorial-active .adhd-container {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(11, 20, 19, 0.9);
+  background: var(--bg-header);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-line);
@@ -449,7 +449,7 @@ body.tutorial-active .adhd-container {
 .nordic-capsule-nav {
   position: relative;
   z-index: 35;
-  background: rgba(7, 15, 26, 0.98);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--border-line);
   padding: 10px 12px;
   display: grid;
@@ -467,8 +467,8 @@ body.tutorial-active .adhd-container {
 }
 
 .capsule-tab {
-  background: rgba(21, 39, 64, 0.55);
-  border: 1px solid rgba(56, 189, 248, 0.16);
+  background: var(--nav-tab-bg);
+  border: 1px solid var(--nav-tab-border);
   color: var(--text-sub);
   padding: 8px 6px;
   border-radius: var(--radius-pill);
@@ -486,16 +486,16 @@ body.tutorial-active .adhd-container {
 }
 
 .capsule-tab:hover {
-  background: rgba(30, 56, 92, 0.75);
+  background: var(--bg-tile-hover);
   color: var(--text-main);
-  border-color: var(--color-cyan);
+  border-color: var(--border-focus);
 }
 
 .capsule-tab.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3));
-  border-color: #2dd4bf;
-  color: #f0fdfa;
-  box-shadow: 0 0 16px rgba(45, 212, 191, 0.28);
+  background: var(--nav-tab-active-bg);
+  border-color: var(--nav-tab-active-border);
+  color: var(--nav-tab-active-text);
+  box-shadow: var(--nav-tab-active-shadow);
 }
 
 /* Payday & Inflow Stream Card */
@@ -537,9 +537,9 @@ body.tutorial-active .adhd-container {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(14, 27, 44, 0.94);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #99f6e4;
+  background: var(--hud-btn-bg);
+  border: 1px solid var(--hud-btn-border);
+  color: var(--hud-btn-text);
   padding: 11px 14px;
   border-radius: var(--radius-pill);
   font-size: 12.5px;
@@ -550,7 +550,7 @@ body.tutorial-active .adhd-container {
 }
 
 .hud-shield-btn:hover {
-  border-color: #2dd4bf;
+  border-color: var(--border-focus);
   transform: translateY(-1px);
 }
 
@@ -560,7 +560,7 @@ body.tutorial-active .adhd-container {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: linear-gradient(135deg, #10b981, #0891b2);
+  background: var(--hud-spend-bg);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 11px 16px;

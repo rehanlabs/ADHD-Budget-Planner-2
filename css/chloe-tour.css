@@ -349,9 +349,9 @@ body.tutorial-active .nordic-capsule-nav .capsule-tab:not(.tutorial-target-activ
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #38bdf8;
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  color: var(--badge-text);
   font-size: 12px;
   font-weight: 800;
   font-family: inherit;
@@ -362,16 +362,16 @@ body.tutorial-active .nordic-capsule-nav .capsule-tab:not(.tutorial-target-activ
 }
 
 .nordic-help-badge:hover {
-  background: rgba(56, 189, 248, 0.3);
+  background: var(--badge-border);
   color: #ffffff;
-  border-color: #38bdf8;
+  border-color: var(--border-focus);
   transform: scale(1.08);
 }
 
 /* Modal Contextual Guide Layout */
 #modal-chloe-help .modal-box {
-  background: rgba(11, 23, 38, 0.97);
-  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  background: var(--bg-panel);
+  border: 1.5px solid var(--border-focus);
   border-radius: 20px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   max-width: 480px;

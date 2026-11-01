@@ -1,4 +1,5 @@
-/* ADHD Budget Planner - Modern Theme Definitions (Edition 2: Nordic Frost & Glassmorphism) */
+/* ADHD Budget Planner - Modern Theme Definitions (Edition 2: Nordic Frost & Glassmorphism)
+   Unified, 100% cohesive color harmony across Header, Capsule Nav, Cards, Badges, and Action HUD */
 :root {
   --font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
   --font-mono: 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace;
@@ -11,6 +12,7 @@
 /* 1. Emerald Modern (Default: Frosted Oceanic Obsidian & Luminous Mint) */
 body[data-theme="emerald-modern"] {
   --bg-app: #070f1a;
+  --bg-header: rgba(7, 15, 26, 0.94);
   --bg-panel: rgba(14, 27, 44, 0.78);
   --bg-tile: rgba(21, 39, 64, 0.65);
   --bg-tile-hover: rgba(30, 56, 92, 0.85);
@@ -24,6 +26,20 @@ body[data-theme="emerald-modern"] {
   --color-cyan: #38bdf8;
   --color-gold: #fbbf24;
   --color-rose: #f43f5e;
+  --nav-bg: rgba(7, 15, 26, 0.96);
+  --nav-tab-bg: rgba(21, 39, 64, 0.55);
+  --nav-tab-border: rgba(56, 189, 248, 0.18);
+  --nav-tab-active-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.35));
+  --nav-tab-active-border: #2dd4bf;
+  --nav-tab-active-text: #f0fdfa;
+  --nav-tab-active-shadow: 0 0 16px rgba(45, 212, 191, 0.28);
+  --badge-bg: rgba(56, 189, 248, 0.14);
+  --badge-border: rgba(56, 189, 248, 0.3);
+  --badge-text: #38bdf8;
+  --hud-btn-bg: rgba(14, 27, 44, 0.94);
+  --hud-btn-border: rgba(56, 189, 248, 0.3);
+  --hud-btn-text: #99f6e4;
+  --hud-spend-bg: linear-gradient(135deg, #10b981, #0891b2);
   --hero-shadow: 0 16px 40px -8px rgba(16, 185, 129, 0.22);
   --glass-blur: blur(18px);
 }
@@ -31,6 +47,7 @@ body[data-theme="emerald-modern"] {
 /* 2. OLED Pure Dark (Deep Minimalist Black with Neon Mint Accents) */
 body[data-theme="oled-dark"] {
   --bg-app: #03060a;
+  --bg-header: rgba(3, 6, 10, 0.96);
   --bg-panel: #0a111a;
   --bg-tile: #111e2e;
   --bg-tile-hover: #192a40;
@@ -44,6 +61,20 @@ body[data-theme="oled-dark"] {
   --color-cyan: #38bdf8;
   --color-gold: #fbbf24;
   --color-rose: #f43f5e;
+  --nav-bg: #03060a;
+  --nav-tab-bg: #111e2e;
+  --nav-tab-border: #1c324a;
+  --nav-tab-active-bg: #192a40;
+  --nav-tab-active-border: #34d399;
+  --nav-tab-active-text: #ffffff;
+  --nav-tab-active-shadow: 0 0 16px rgba(52, 211, 153, 0.3);
+  --badge-bg: rgba(52, 211, 153, 0.15);
+  --badge-border: rgba(52, 211, 153, 0.35);
+  --badge-text: #34d399;
+  --hud-btn-bg: #0a111a;
+  --hud-btn-border: #1c324a;
+  --hud-btn-text: #94a3b8;
+  --hud-spend-bg: linear-gradient(135deg, #059669, #0d9488);
   --hero-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   --glass-blur: none;
 }
@@ -51,9 +82,10 @@ body[data-theme="oled-dark"] {
 /* 3. Nordic Fog (Clean Pristine Frost Light) */
 body[data-theme="nordic-fog"] {
   --bg-app: #f0f6fa;
-  --bg-panel: rgba(255, 255, 255, 0.85);
-  --bg-tile: #f8fafc;
-  --bg-tile-hover: #e2e8f0;
+  --bg-header: rgba(240, 246, 250, 0.94);
+  --bg-panel: rgba(255, 255, 255, 0.88);
+  --bg-tile: #e8eff5;
+  --bg-tile-hover: #dbe7f0;
   --border-line: #cbd5e1;
   --border-focus: #0d9488;
   --text-main: #0f172a;
@@ -64,17 +96,32 @@ body[data-theme="nordic-fog"] {
   --color-cyan: #0284c7;
   --color-gold: #d97706;
   --color-rose: #e11d48;
-  --hero-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  --nav-bg: rgba(240, 246, 250, 0.95);
+  --nav-tab-bg: #e2ecf4;
+  --nav-tab-border: #cbd5e1;
+  --nav-tab-active-bg: #ffffff;
+  --nav-tab-active-border: #0d9488;
+  --nav-tab-active-text: #059669;
+  --nav-tab-active-shadow: 0 4px 14px rgba(13, 148, 136, 0.18);
+  --badge-bg: rgba(13, 148, 136, 0.12);
+  --badge-border: rgba(13, 148, 136, 0.3);
+  --badge-text: #0d9488;
+  --hud-btn-bg: #ffffff;
+  --hud-btn-border: #cbd5e1;
+  --hud-btn-text: #334155;
+  --hud-spend-bg: linear-gradient(135deg, #059669, #0284c7);
+  --hero-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
   --glass-blur: blur(16px);
 }
 
-/* 4. Warm Earth (Deep Espresso Obsidian with Amber Mint Highlights) */
+/* 4. Warm Earth (Deep Espresso Charcoal with Amber Mint Highlights) */
 body[data-theme="warm-earth"] {
   --bg-app: #121516;
-  --bg-panel: rgba(28, 32, 34, 0.85);
-  --bg-tile: #272d30;
-  --bg-tile-hover: #363d42;
-  --border-line: #414b50;
+  --bg-header: rgba(18, 21, 22, 0.94);
+  --bg-panel: rgba(28, 32, 34, 0.88);
+  --bg-tile: #23292c;
+  --bg-tile-hover: #30373b;
+  --border-line: #3d464b;
   --border-focus: #10b981;
   --text-main: #fbfbfc;
   --text-sub: #cbd5e1;
@@ -84,6 +131,20 @@ body[data-theme="warm-earth"] {
   --color-cyan: #2dd4bf;
   --color-gold: #fbbf24;
   --color-rose: #f43f5e;
+  --nav-bg: rgba(18, 21, 22, 0.96);
+  --nav-tab-bg: #23292c;
+  --nav-tab-border: #3d464b;
+  --nav-tab-active-bg: #30373b;
+  --nav-tab-active-border: #10b981;
+  --nav-tab-active-text: #10b981;
+  --nav-tab-active-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+  --badge-bg: rgba(16, 185, 129, 0.14);
+  --badge-border: rgba(16, 185, 129, 0.35);
+  --badge-text: #10b981;
+  --hud-btn-bg: #23292c;
+  --hud-btn-border: #3d464b;
+  --hud-btn-text: #cbd5e1;
+  --hud-spend-bg: linear-gradient(135deg, #10b981, #0891b2);
   --hero-shadow: 0 14px 36px rgba(16, 185, 129, 0.16);
   --glass-blur: blur(16px);
 }
